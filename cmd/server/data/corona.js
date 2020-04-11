@@ -2,7 +2,17 @@
 
 function render() {
   console.log("starting rendering")
-  d3.csv("deaths.csv", data => {return {data}}).then(data => vis(data))
+  //sourcedata = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  sourcedata = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+   // sourcedata = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+
+  //d3.csv("deaths.csv", data => {return {data}}).then(data => vis(data))
+  d3.csv(sourcedata, data => {return {data}}).then(data => vis(data))
+
+}
+
+function labelme(svg,path) {
+  console.log(path)
 }
 
 function hover(svg, path) {
@@ -61,7 +71,7 @@ function vis(d) {
   columns = columns.map(c => c.replace("2020","20"))
   console.log(columns)
   var data = {
-    y: "confirmed deaths",
+    y: "(source: https://github.com/CSSEGISandData/COVID-19) by Johns Hopkins CSSE",
     series: d.map(e => ({
       name: e.data["Country/Region"] + " " + e.data["Province/State"],
       values: columns.map(k => +e.data[k])
@@ -86,12 +96,12 @@ function vis(d) {
     .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
 
     yAxis = g => g
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(y))
+    .attr("transform", `translate(${width},0)`)
+    .call(d3.axisRight(y))
     .call(g => g.select(".domain").remove())
     .call(g => g.select(".tick:last-of-type text").clone()
-        .attr("x", 3)
-        .attr("text-anchor", "start")
+        .attr("x", -5)
+        .attr("text-anchor", "end")
         .attr("font-weight", "bold")
         .text(data.y))
 
@@ -100,8 +110,7 @@ function vis(d) {
     .x((d, i) => x(data.dates[i]))
     .y(d => y(d))
 
-    ///
- //   chart = {
+
      svg = d3.select("svg")
      .attr("viewBox", [0, 0, width, height])
      .style("overflow", "visible");
@@ -121,16 +130,32 @@ function vis(d) {
     .selectAll("path")
     .data(data.series)
     .join("path")
+      .attr("name",d.name)
       .style("mix-blend-mode", "multiply")
       .attr("d", d => line(d.values));
 
+      svg.append("g")
+           .selectAll("circle")
+           .data(data.series)
+           .enter()
+           .append("circle")
+           .attr("r", 2.5)
+           .attr("cx",width - margin.right)
+           .attr("cy", (d,i) => y(d.values[d.values.length-1]))
+           .append("text")
+
+        svg.append("g").selectAll("g")
+            .data(data.series)
+            .enter()
+                 .append("text")
+           .attr("font-family", "sans-serif")
+           .attr("font-size", 10)
+           .attr("text-anchor", "end")
+           .attr("x",width - margin.right - 5)
+           .attr("y", (d,i) => y(d.values[d.values.length-1]))
+           .text(d => d.name)
+
 
   svg.call(hover, path);
-
-  //return svg.node();
-//}
-
-    ///
-
 
 }
