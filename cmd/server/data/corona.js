@@ -4,14 +4,14 @@ function render() {
   console.log("starting rendering")
   confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  passed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-  passed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
+  deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 
-  d3.csv(passed, data => {return {data}}).then(data => vis(data,"passed"))
+  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
   d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
- // d3.csv(passed_US, data => {return {data}}).then(data => vis(data,"passed_US"))
+ // d3.csv(deceased_US, data => {return {data}}).then(data => vis(data,"deceased_US"))
  // d3.csv(confirmed_US, data => {return {data}}).then(data => vis(data,"confirmed_US"))
 
 
@@ -70,7 +70,7 @@ function hover(svg, path, data, x, y) {
 
 function vis(d,key) {
   // turn the data into a what d3 expects for time series
-  var columns = key === "passed_US" ? d.columns.slice(12): d.columns.slice(4);
+  var columns = key === "deceased_US" ? d.columns.slice(12): d.columns.slice(4);
   columns = columns.map(c => c.replace("2020","20"))
 
   var data = {
