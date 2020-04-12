@@ -11,8 +11,8 @@ function render() {
   d3.csv(passed, data => {return {data}}).then(data => vis(data,"passed"))
   d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
-  d3.csv(passed_US, data => {return {data}}).then(data => vis(data,"passed_US"))
-  d3.csv(confirmed_US, data => {return {data}}).then(data => vis(data,"confirmed_US"))
+ // d3.csv(passed_US, data => {return {data}}).then(data => vis(data,"passed_US"))
+ // d3.csv(confirmed_US, data => {return {data}}).then(data => vis(data,"confirmed_US"))
 
 
 }
@@ -82,8 +82,8 @@ function vis(d,key) {
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
   const watermark = d3.max(data.series, d => d3.mean(d.values))
-  width = 700
-  height = 700
+  width = 500
+  height = 500
   margin = ({top: 20, right: 20, bottom: 30, left: 30})
   let x = d3.scaleUtc()
     .domain(d3.extent(data.dates))
