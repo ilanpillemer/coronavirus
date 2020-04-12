@@ -13,7 +13,7 @@ services:
 
 script:
   - go get -u
-  - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./cmd/basic/main.go
+  - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./cmd/server/main.go
   - docker build -t ilanpillemer/corona .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push ilanpillemer/corona
