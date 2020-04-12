@@ -74,7 +74,7 @@ function vis(d,key) {
   columns = columns.map(c => c.replace("2020","20"))
 
   var data = {
-    y: key + " (source: https://github.com/CSSEGISandData/COVID-19) by Johns Hopkins CSSE",
+    y: key + " (source: https://github.com/CSSEGISandData/COVID-19)",
     series: d.map(e => ({
       name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
       values: columns.map(k => +e.data[k])
@@ -108,7 +108,7 @@ function vis(d,key) {
         .text(data.y))
 
         line = d3.line()
-    .defined(d => !isNaN(d))
+    .defined(d => !isNaN(d) )
     .x((d, i) => x(data.dates[i]))
     .y(d => y(d))
 
