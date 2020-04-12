@@ -6,7 +6,7 @@ sudo: required
 language: go
 env:
   - GO111MODULE=on
-   - COMMIT=${TRAVIS_COMMIT::8}
+  - COMMIT=${TRAVIS_COMMIT::8}
 
 go:
   - 1.14.x
