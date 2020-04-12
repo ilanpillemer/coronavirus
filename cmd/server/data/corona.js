@@ -2,12 +2,15 @@
 
 function render() {
   console.log("starting rendering")
-  //sourcedata = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+  confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   sourcedata = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-   // sourcedata = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 
   //d3.csv("deaths.csv", data => {return {data}}).then(data => vis(data))
-  d3.csv(sourcedata, data => {return {data}}).then(data => vis(data))
+  d3.csv(sourcedata, data => {return {data}}).then(data => vis(data,"passed"))
+  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
+  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
+
 
 }
 
@@ -15,7 +18,7 @@ function labelme(svg,path) {
   console.log(path)
 }
 
-function hover(svg, path) {
+function hover(svg, path, data, x, y) {
 
   if ("ontouchstart" in document) svg
       .style("-webkit-tap-highlight-color", "transparent")
@@ -39,17 +42,18 @@ function hover(svg, path) {
       .attr("text-anchor", "middle")
       .attr("y", -8);
 
-  function moved() {
+  function moved(comp) {
+    var pt = d3.mouse(this)
     d3.event.preventDefault();
-    const ym = y.invert(d3.event.layerY);
-    const xm = x.invert(d3.event.layerX);
-    const i1 = d3.bisectLeft(gdata.dates, xm, 1);
-    const i0 = i1 - 1;
-    const i = xm - gdata.dates[i0] > gdata.dates[i1] - xm ? i1 : i0;
-    const s = d3.least(gdata.series, d => Math.abs(d.values[i] - ym));
+    var ym = y.invert(pt[1]);
+    var xm = x.invert(pt[0]);
+    var i1 = d3.bisectLeft(data.dates, xm, 1);
+    var i0 = i1 - 1;
+    var i = xm - data.dates[i0] > data.dates[i1] - xm ? i1 : i0;
+    var s = d3.least(data.series, d => Math.abs(d.values[i] - ym));
     path.attr("stroke", d => d === s ? null : "#ddd").filter(d => d === s).raise();
-    dot.attr("transform", `translate(${x(gdata.dates[i])},${y(s.values[i])})`);
-    dot.select("text").text(s.name);
+    dot.attr("transform", `translate(${x(data.dates[i])},${y(s.values[i])})`);
+    dot.select("text").text(s.name +  " : " + s.values[i]);
   }
 
   function entered() {
@@ -63,31 +67,30 @@ function hover(svg, path) {
   }
 }
 
-var gdata
+//var gdata
 
-function vis(d) {
+function vis(d,key) {
   // turn the data into a what d3 expects for time series
   var columns = d.columns.slice(4);
   columns = columns.map(c => c.replace("2020","20"))
-  console.log(columns)
   var data = {
-    y: "(source: https://github.com/CSSEGISandData/COVID-19) by Johns Hopkins CSSE",
+    y: key + " (source: https://github.com/CSSEGISandData/COVID-19) by Johns Hopkins CSSE",
     series: d.map(e => ({
       name: e.data["Country/Region"] + " " + e.data["Province/State"],
       values: columns.map(k => +e.data[k])
     })),
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
-  gdata = data
-  console.log(gdata)
-  width = 1200
-  height = 1200
+  //gdata = data
+  //console.log(gdata)
+  width = 700
+  height = 700
   margin = ({top: 20, right: 20, bottom: 30, left: 30})
-  x = d3.scaleUtc()
-    .domain(d3.extent(gdata.dates))
+  let x = d3.scaleUtc()
+    .domain(d3.extent(data.dates))
     .range([margin.left, width - margin.right])
 
-    y = d3.scaleLinear()
+   let y = d3.scaleLinear()
     .domain([0, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
 
@@ -111,7 +114,7 @@ function vis(d) {
     .y(d => y(d))
 
 
-     svg = d3.select("svg")
+     svg = d3.select("svg." + key)
      .attr("viewBox", [0, 0, width, height])
      .style("overflow", "visible");
 
@@ -147,15 +150,13 @@ function vis(d) {
         svg.append("g").selectAll("g")
             .data(data.series)
             .enter()
-                 .append("text")
+           .append("text")
            .attr("font-family", "sans-serif")
            .attr("font-size", 10)
            .attr("text-anchor", "end")
            .attr("x",width - margin.right - 5)
            .attr("y", (d,i) => y(d.values[d.values.length-1]))
-           .text(d => d.name)
-
-
-  svg.call(hover, path);
+           .text(d => d.name )
+  svg.call(hover, path, data, x, y);
 
 }
