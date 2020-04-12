@@ -74,7 +74,7 @@ function vis(d,key) {
   columns = columns.map(c => c.replace("2020","20"))
 
   var data = {
-    y: key + " (source: https://github.com/CSSEGISandData/COVID-19)",
+    y: key ,
     series: d.map(e => ({
       name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
       values: columns.map(k => +e.data[k])
