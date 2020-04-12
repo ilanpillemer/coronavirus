@@ -6,7 +6,6 @@ sudo: required
 language: go
 env:
   - GO111MODULE=on
-  - COMMIT=${TRAVIS_COMMIT::8}
 
 go:
   - 1.14.x
@@ -15,6 +14,6 @@ services:
 
 script:
   - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./cmd/server/main.go
-  - docker build -t ilanpillemer/corona:"$COMMIT" .
+  - docker build -t ilanpillemer/corona:${TRAVIS_COMMIT::8} .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push ilanpillemer/corona:"$COMMIT"
+  - docker push ilanpillemer/corona:${TRAVIS_COMMIT::8}
