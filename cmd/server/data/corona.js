@@ -3,19 +3,18 @@
 function render() {
   console.log("starting rendering")
   confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-  sourcedata = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+  confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
+  passed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+  passed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
+  recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 
-  //d3.csv("deaths.csv", data => {return {data}}).then(data => vis(data))
-  d3.csv(sourcedata, data => {return {data}}).then(data => vis(data,"passed"))
+  d3.csv(passed, data => {return {data}}).then(data => vis(data,"passed"))
   d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
+  d3.csv(passed_US, data => {return {data}}).then(data => vis(data,"passed_US"))
+  d3.csv(confirmed_US, data => {return {data}}).then(data => vis(data,"confirmed_US"))
 
 
-}
-
-function labelme(svg,path) {
-  console.log(path)
 }
 
 function hover(svg, path, data, x, y) {
@@ -71,18 +70,18 @@ function hover(svg, path, data, x, y) {
 
 function vis(d,key) {
   // turn the data into a what d3 expects for time series
-  var columns = d.columns.slice(4);
+  var columns = key === "passed_US" ? d.columns.slice(12): d.columns.slice(4);
   columns = columns.map(c => c.replace("2020","20"))
+
   var data = {
     y: key + " (source: https://github.com/CSSEGISandData/COVID-19) by Johns Hopkins CSSE",
     series: d.map(e => ({
-      name: e.data["Country/Region"] + " " + e.data["Province/State"],
+      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
       values: columns.map(k => +e.data[k])
     })),
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
-  //gdata = data
-  //console.log(gdata)
+  const watermark = d3.max(data.series, d => d3.mean(d.values))
   width = 700
   height = 700
   margin = ({top: 20, right: 20, bottom: 30, left: 30})
@@ -156,7 +155,10 @@ function vis(d,key) {
            .attr("text-anchor", "end")
            .attr("x",width - margin.right - 5)
            .attr("y", (d,i) => y(d.values[d.values.length-1]))
-           .text(d => d.name )
+           .text((d) => {
+             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
+           } )
+
   svg.call(hover, path, data, x, y);
 
 }
