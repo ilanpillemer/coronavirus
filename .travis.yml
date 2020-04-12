@@ -14,6 +14,6 @@ services:
 
 script:
   - CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o server ./cmd/server/main.go
-  - docker build -t ilanpillemer/corona .
+  - docker build -t ilanpillemer/corona:${TRAVIS_COMMIT::8} .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - docker push ilanpillemer/corona
+  - docker push ilanpillemer/corona:${TRAVIS_COMMIT::8}
