@@ -37,11 +37,32 @@ function hover(svg, path, data, x, y) {
 
   dot.append("text")
       .attr("font-family", "sans-serif")
-      .attr("font-size", 10)
-      .attr("text-anchor", "middle")
-      .attr("y", -8);
+      .attr("font-size", 8)
+      .attr("text-anchor", "end")
+      .attr("y", -20);
+
+ dot.append("path")
+       .classed("xgrid",true)
+       .attr("fill", "none")
+       .style("stroke-dasharray", ("3, 3"))
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+ ;
+
+ dot.append("path")
+       .classed("ygrid",true)
+       .attr("fill", "none")
+       .style("stroke-dasharray", ("3, 3"))
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+ ;
 
   function moved(comp) {
+    margin = ({top: 20, right: 20, bottom: 30, left: 30})
     var pt = d3.mouse(this)
     d3.event.preventDefault();
     var ym = y.invert(pt[1]);
@@ -52,7 +73,27 @@ function hover(svg, path, data, x, y) {
     var s = d3.least(data.series, d => Math.abs(d.values[i] - ym));
     path.attr("stroke", d => d === s ? null : "#ddd").filter(d => d === s).raise();
     dot.attr("transform", `translate(${x(data.dates[i])},${y(s.values[i])})`);
-    dot.select("text").text(s.name +  " : " + s.values[i]);
+
+    var formatter = d3.timeFormat("%d %b")
+    shortdate = formatter(data.dates[i] )
+    dot.select("text").text(s.name +  " " + s.values[i] + " " + shortdate);
+
+    xline = d3.line()([
+     [0,0],
+     [width-x(data.dates[i]) , 0]
+    ])
+
+    yline = d3.line()([
+     [0,0],
+     [ 0, height-y(s.values[i]) - margin.bottom]
+    ])
+
+      dot.select("path.xgrid")
+//       .style("mix-blend-mode", null).attr("stroke", "#ddd")
+      .attr("d", xline)
+
+     dot.select("path.ygrid")
+      .attr("d", yline);
   }
 
   function entered() {
