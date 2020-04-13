@@ -11,6 +11,10 @@ The website is strictly for educational and academic research purposes only.
 
 + https://schmooze.chevrutah.com/corona
 
+# caveats
+
++ If you are using MacOS graphical rendering performs the best on Safari, decently on Firefox and poorly on Chrome. This seems related to how each browser leverages the GPU.
+
 # sources
 
 ## John Hopkins
@@ -40,7 +44,7 @@ Please see John Hopkins [Terms of Use](https://github.com/CSSEGISandData/COVID-1
 + [flux](https://fluxcd.io)
 + [travis ci](https://travis-ci.org)
 
-# Provider used for infrastructure
+# provider used for infrastructure
 
 + [Digital Ocean](https://www.digitalocean.com)
 
