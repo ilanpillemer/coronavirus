@@ -2,7 +2,6 @@
 
 [![Build Status](https://travis-ci.org/ilanpillemer/coronavirus.svg?branch=master)](https://travis-ci.org/ilanpillemer/coronavirus)
 
-NB Please see John Hopkins [Terms of Use](https://github.com/CSSEGISandData/COVID-19/blob/master/README.md) to understand the limitations and warranties of the data.
 
 The Website relies upon publicly available data from multiple sources, that do not always agree. Any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability are hereby disclaimed. Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited.
 
@@ -14,7 +13,14 @@ The website is strictly for educational and academic research purposes only.
 
 # sources
 
-+ https://github.com/CSSEGISandData/COVID-19
+## John Hopkins
+
+This is the data repository for the 2019 Novel Coronavirus Visual Dashboard operated by the Johns Hopkins University Center for Systems Science and Engineering (JHU CSSE).
+Also, Supported by ESRI Living Atlas Team and the Johns Hopkins University Applied Physics Lab (JHU APL).
+
++ John Hopkins [https://github.com/CSSEGISandData/COVID-19](https://github.com/CSSEGISandData/COVID-19)
+
+Please see John Hopkins [Terms of Use](https://github.com/CSSEGISandData/COVID-19/blob/master/README.md) to understand the limitations and warranties of the data.
 
 # resources
 
