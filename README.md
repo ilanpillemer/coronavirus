@@ -1,6 +1,10 @@
 # visualisations of data from the covid-19 pandemic
 
-website coming soon...
+[![Build Status](https://travis-ci.org/ilanpillemer/coronavirus.svg?branch=master)](https://travis-ci.org/ilanpillemer/coronavirus)
+
+# website
+
++ https://schmooze.chevrutah.com/corona
 
 # sources
 
