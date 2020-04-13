@@ -48,5 +48,8 @@ Please see John Hopkins [Terms of Use](https://github.com/CSSEGISandData/COVID-1
 
 + [Digital Ocean](https://www.digitalocean.com)
 
+# kubernetes flux gitops repository
+
++ https://github.com/chevrutah/flux
 
 Thanks to all who contribute to and support the great open source ecosystem!
