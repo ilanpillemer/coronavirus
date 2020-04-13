@@ -33,4 +33,4 @@
 + [Digital Ocean](https://www.digitalocean.com)
 
 
-Thanks to all who contribute and support the great open source ecosystem!
+Thanks to all who contribute to and support the great open source ecosystem!
