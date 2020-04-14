@@ -14,10 +14,13 @@ M.AutoInit();
   d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
   d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
+  d3.select("#scale").on("change", render) ;
  // d3.csv(deceased_US, data => {return {data}}).then(data => vis(data,"deceased_US"))
  // d3.csv(confirmed_US, data => {return {data}}).then(data => vis(data,"confirmed_US"))
+}
 
-
+function hello() {
+  console.log("hello")
 }
 
 function hover(svg, path, data, x, y) {
@@ -137,26 +140,33 @@ function vis(d,key) {
 //  .classed("countryCheckbox",true)
 //  .attr("type","checkbox")
 //  .attr("value",d => d.name)
-
-
-  const watermark = d3.max(data.series, d => d3.mean(d.values)) / 2
-  width = 300
-  height = 300
-  margin = ({top: 20, right: 20, bottom: 30, left: 30})
+  const showSqrt = d3.select("#scale").property("checked")
+  const factor = showSqrt ? 5 : 2
+  const watermark = d3.max(data.series, d => d3.mean(d.values)) / factor
+  width = 600
+  height = 600
+  margin = ({top: 20, right: 50, bottom: 30, left: 20})
   let x = d3.scaleUtc()
     .domain(d3.extent(data.dates))
     .range([margin.left, width - margin.right])
 
-   let y = d3.scaleLinear()
+   let y = showSqrt ?
+    d3.scaleSqrt()
     .domain([0, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
+   :
+     d3.scaleLinear()
+    .domain([0, d3.max(data.series, d => d3.max(d.values))]).nice()
+    .range([height - margin.bottom, margin.top])
+
+
 
     xAxis = g => g
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
 
     yAxis = g => g
-    .attr("transform", `translate(${width},0)`)
+    .attr("transform", `translate(${width-margin.right+2},0)`)
     .call(d3.axisRight(y))
     .call(g => g.select(".domain").remove())
     .call(g => g.select(".tick:last-of-type text").clone()
@@ -175,13 +185,24 @@ function vis(d,key) {
      .attr("viewBox", [0, 0, width, height])
      .style("overflow", "visible");
 
+   svg.select("g#paths").data(data.series).remove()
+   svg.select("g#names").data(data.series).remove()
+   svg.select("g#dots").data(data.series).remove()
+   svg.select("g#yaxis").data(data.series).remove()
+   svg.select("g#xaxis").data(data.series).remove()
+
   svg.append("g")
+      .attr("id","xaxis")
       .call(xAxis);
 
   svg.append("g")
+      .attr("id","yaxis")
       .call(yAxis);
 
+
+
   const path = svg.append("g")
+      .attr("id","paths")
       .attr("fill", "none")
       .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
@@ -195,6 +216,7 @@ function vis(d,key) {
       .attr("d", d => line(d.values));
 
      svg.append("g")
+            .attr("id","dots")
            .selectAll("circle")
            .data(data.series)
            .enter()
@@ -204,14 +226,14 @@ function vis(d,key) {
            .attr("cy", (d,i) => y(d.values[d.values.length-1]))
            .append("text")
 
-
-
-        svg.append("g").selectAll("g")
-            .data(data.series)
+        svg.append("g")
+             .attr("id","names")
+             .selectAll("g")
+            .data(data.series, d => d.name)
             .enter()
            .append("text")
            .attr("font-family", "sans-serif")
-           .attr("font-size", 7)
+           .attr("font-size", 10)
            .attr("text-anchor", "end")
            .attr("x",width - margin.right - 3)
            .attr("y", (d,i) => y(d.values[d.values.length-1]))
