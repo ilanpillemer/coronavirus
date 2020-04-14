@@ -160,7 +160,7 @@ function vis(d,key) {
     .call(d3.axisRight(y))
     .call(g => g.select(".domain").remove())
     .call(g => g.select(".tick:last-of-type text").clone()
-        .attr("x", -5)
+        .attr("x", -width/2)
         .attr("text-anchor", "end")
         .attr("font-weight", "bold")
         .text(data.y))
