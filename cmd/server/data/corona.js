@@ -141,10 +141,10 @@ function vis(d,key) {
 //  .attr("type","checkbox")
 //  .attr("value",d => d.name)
   const showSqrt = d3.select("#scale").property("checked")
-  const factor = showSqrt ? 2.5 : 1
-  const watermark = d3.max(data.series, d => d3.mean(d.values)) / factor
-  width = 400
-  height = 400
+  const factor = showSqrt ? 1 : 1
+  const watermark = d3.max(data.series, d => d3.median(d.values)) / factor
+  width = 300
+  height = 300
   margin = ({top: 20, right: 50, bottom: 30, left: 20})
   let x = d3.scaleUtc()
     .domain(d3.extent(data.dates))
@@ -233,7 +233,7 @@ function vis(d,key) {
             .enter()
            .append("text")
            .attr("font-family", "sans-serif")
-           .attr("font-size", 10)
+           .attr("font-size", 8)
            .attr("text-anchor", "end")
            .attr("x",width - margin.right - 3)
            .attr("y", (d,i) => y(d.values[d.values.length-1]))
