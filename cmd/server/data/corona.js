@@ -140,8 +140,8 @@ function vis(d,key) {
 
 
   const watermark = d3.max(data.series, d => d3.mean(d.values)) / 2
-  width = 500
-  height = 500
+  width = 300
+  height = 300
   margin = ({top: 20, right: 20, bottom: 30, left: 30})
   let x = d3.scaleUtc()
     .domain(d3.extent(data.dates))
