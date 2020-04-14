@@ -141,10 +141,10 @@ function vis(d,key) {
 //  .attr("type","checkbox")
 //  .attr("value",d => d.name)
   const showSqrt = d3.select("#scale").property("checked")
-  const factor = showSqrt ? 5 : 2
+  const factor = showSqrt ? 2.5 : 1
   const watermark = d3.max(data.series, d => d3.mean(d.values)) / factor
-  width = 600
-  height = 600
+  width = 400
+  height = 400
   margin = ({top: 20, right: 50, bottom: 30, left: 20})
   let x = d3.scaleUtc()
     .domain(d3.extent(data.dates))
