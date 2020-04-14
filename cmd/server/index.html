@@ -2,27 +2,83 @@
 <html>
 <title>coronavirus visualisations</title>
 <head>
+<!--Import Google Icon Font-->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<!--materialize-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<!-- d3 -->
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="https://d3js.org/d3-array.v2.min.js"></script>
+<!-- me -->
 <script src="corona.js"></script>
 </head>
 <body  onload="render()">
-<h3>source: <a href="https://github.com/CSSEGISandData/COVID-19" >https://github.com/CSSEGISandData/COVID-19</a></h3>
-<svg class="deceased" style="width:600px;height:600px;border:1px lightgray solid;" />
-<svg class="confirmed" style="width:600px;height:600px;border:1px lightgray solid;" />
-<svg class="recovered" style="width:600px;height:600px;border:1px lightgray solid;" />
-<!-- <svg class="deceased_US" style="width:700px;height:700px;border:1px lightgray solid;" />
-<svg class="confirmed_US" style="width:700px;height:700px;border:1px lightgray solid;" /> -->
-<br /><sub>NB: on MacOS, performs fast on Safari, decently on Firefox, poorly on Chrome. ¯\_(ツ)_/¯</sub>
-<hr />
-<div><sub>
-<p>The Website is strictly for educational and academic research purposes only.</p>
-<p>The Website relies upon publicly available data from multiple sources, that do not always agree.
-Any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability are hereby disclaimed.
-Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited.</p>
-<p>Please consult the links to data sources, or the github repository listed below to understand the terms of use.</p>
-<hr />
-<h4><a href="https://github.com/ilanpillemer/coronavirus"><img src="https://schmooze.chevrutah.com/corona/GitHub.png"></a></h4>
-</sub></div>
+
+    <!-- Navbar goes here -->
+	  <nav class="blue">
+	    <div class="nav-wrapper" class="block blue">
+	      <a href="#" class="brand-logo left">COVID-19 Visualisation</a>
+	      <ul id="nav-mobile" class="left hide-on-med-and-down">
+	      <!--
+	        <li><a href="sass.html">Sass</a></li>
+	        <li><a href="badges.html">Components</a></li>
+	        <li><a href="collapsible.html">JavaScript</a></li>
+	        -->
+	      </ul>
+	    </div>
+	  </nav>
+    <!-- Page Layout here -->
+    <div class="blue lighten-4">
+    <div class="row" >
+
+      <div class="col s0">
+        <!-- Grey navigation panel -->
+      </div>
+      </div>
+
+      <div class="col s12" >
+        <!-- Teal page content  -->
+ 	<svg class="deceased red lighten-5" style="width:750px;height:600px;border:1px lightgray solid;" />
+	<svg class="confirmed blue lighten-5" style="width:750px;height:600px;border:1px lightgray solid;" />
+	<svg class="recovered blue lighten-5" style="width:750px;height:600px;border:1px lightgray solid;" />
+	<!-- <svg class="deceased_US" style="width:700px;height:700px;border:1px lightgray solid;" />
+	<svg class="confirmed_US" style="width:700px;height:700px;border:1px lightgray solid;" /> -->
+      </div>
+    </div>
+            <footer class="page-footer blue">
+          <div class="container">
+            <div class="row">
+              <div class="col l6 s12">
+                <h5 class="white-text">NB</h5>
+                <p class="grey-text text-lighten-4">
+                The Website relies upon publicly available data from multiple sources, that do not always agree.
+	Any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability are hereby disclaimed.
+	Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited.
+	Please consult the links to data sources, or the github repository linked below to the right to understand the terms of use.
+	 <sub><p>NB: on MacOS, performs fast on Safari, decently on Firefox, poorly on Chrome. ¯\_(ツ)_/¯</p></sub>
+              </div>
+              <div class="col l4 offset-l2 s12">
+                <h5 class="white-text">Sources</h5>
+                <ul>
+                  <li><a class="grey-text text-lighten-3" href="https://github.com/CSSEGISandData/COVID-19">John Hopkins CSSE</a></li>
+                  <!--
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                  <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                  -->
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="footer-copyright">
+            <div class="container">
+           The Website is strictly for educational and academic research purposes only.
+
+            <a class="grey-text text-lighten-4 right" href="https://github.com/ilanpillemer/coronavirus"><img src="https://schmooze.chevrutah.com/corona/GitHub.png"></a>
+            </div>
+          </div>
+        </footer>
+
 </body>
 </html>

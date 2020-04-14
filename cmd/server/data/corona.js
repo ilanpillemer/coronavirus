@@ -1,6 +1,9 @@
+
 // visualisation based on example at "https://observablehq.com/@d3/multi-line-chart"
 
 function render() {
+//initalise for materialize see https://materializecss.com/select.html
+M.AutoInit();
   console.log("starting rendering")
   confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
@@ -122,7 +125,21 @@ function vis(d,key) {
     })),
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
-  const watermark = d3.max(data.series, d => d3.mean(d.values))
+  /// setup checkboxes
+//  d3
+//  .selectAll("input.countryCheckbox")
+//  .data(data.series)
+//  .enter()
+//  .append("label")
+//  .attr("for",d => d.name)
+//  .text(d => d.name)
+//  .append("input")
+//  .classed("countryCheckbox",true)
+//  .attr("type","checkbox")
+//  .attr("value",d => d.name)
+
+
+  const watermark = d3.max(data.series, d => d3.mean(d.values)) / 2
   width = 500
   height = 500
   margin = ({top: 20, right: 20, bottom: 30, left: 30})
@@ -177,24 +194,26 @@ function vis(d,key) {
       .style("mix-blend-mode", "multiply")
       .attr("d", d => line(d.values));
 
-      svg.append("g")
+     svg.append("g")
            .selectAll("circle")
            .data(data.series)
            .enter()
            .append("circle")
-           .attr("r", 2.5)
+           .attr("r", 1.0)
            .attr("cx",width - margin.right)
            .attr("cy", (d,i) => y(d.values[d.values.length-1]))
            .append("text")
+
+
 
         svg.append("g").selectAll("g")
             .data(data.series)
             .enter()
            .append("text")
            .attr("font-family", "sans-serif")
-           .attr("font-size", 10)
+           .attr("font-size", 7)
            .attr("text-anchor", "end")
-           .attr("x",width - margin.right - 5)
+           .attr("x",width - margin.right - 3)
            .attr("y", (d,i) => y(d.values[d.values.length-1]))
            .text((d) => {
              return +(d.values[d.values.length-1]) > watermark ? d.name : ""

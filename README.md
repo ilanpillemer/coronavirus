@@ -43,6 +43,7 @@ Please see John Hopkins [Terms of Use](https://github.com/CSSEGISandData/COVID-1
 + [Dockerhub](https://hub.docker.com)
 + [flux](https://fluxcd.io)
 + [travis ci](https://travis-ci.org)
++ [materialize](https://materializecss.com/)
 
 # provider used for infrastructure
 
