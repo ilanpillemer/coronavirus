@@ -3,7 +3,7 @@
 
 function render() {
 //initalise for materialize see https://materializecss.com/select.html
-M.AutoInit();
+
   console.log("starting rendering")
   confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
@@ -128,18 +128,29 @@ function vis(d,key) {
     })),
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
-  /// setup checkboxes
-//  d3
-//  .selectAll("input.countryCheckbox")
-//  .data(data.series)
-//  .enter()
-//  .append("label")
-//  .attr("for",d => d.name)
-//  .text(d => d.name)
-//  .append("input")
-//  .classed("countryCheckbox",true)
-//  .attr("type","checkbox")
-//  .attr("value",d => d.name)
+
+//  data.series = data.series.filter(d => {
+//  console.log(d.name)
+//  console.log(d)
+//  return  ["US ","Spain ","South Africa"].includes(d.name)
+//   })
+//  console.log(data.series)
+
+
+
+// setup checkboxes
+  d3
+  .select("select.countries")
+  .selectAll("option.country")
+  .data(data.series)
+  .enter()
+  .append("option")
+  .classed("country",true)
+   .attr("value",d => d.name)
+   .html(d => d.name)
+
+   M.AutoInit();
+
   const showSqrt = d3.select("#scale").property("checked")
   const factor = showSqrt ? 1 : 1
   const watermark = d3.max(data.series, d => d3.median(d.values)) / factor
