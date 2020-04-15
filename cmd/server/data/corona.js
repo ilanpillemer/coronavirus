@@ -134,7 +134,7 @@ function vis(d,key) {
 
 
 // setup checkboxes
-  const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei"]
+  const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
 
    d3
   .select("select.countries")
