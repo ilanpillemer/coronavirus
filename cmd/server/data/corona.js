@@ -129,27 +129,34 @@ function vis(d,key) {
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
 
-//  data.series = data.series.filter(d => {
-//  console.log(d.name)
-//  console.log(d)
-//  return  ["US ","Spain ","South Africa"].includes(d.name)
-//   })
-//  console.log(data.series)
+
 
 
 
 // setup checkboxes
-  d3
+  const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei"]
+
+   d3
   .select("select.countries")
   .selectAll("option.country")
   .data(data.series)
-  .enter()
+  .enter() //only runs once as data series doesnt change
   .append("option")
   .classed("country",true)
+  .property("selected",d => {
+      return defaultCountries.includes(d.name)
+    })
    .attr("value",d => d.name)
    .html(d => d.name)
-
    M.AutoInit();
+
+
+   //get all selected
+  const selectedCountries = $('select.countries').val()
+  data.series = data.series.filter(d => {
+    return  selectedCountries.includes(d.name)
+   })
+  console.log(data.series)
 
   const showSqrt = d3.select("#scale").property("checked")
   const factor = showSqrt ? 1 : 1
