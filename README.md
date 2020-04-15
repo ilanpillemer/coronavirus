@@ -26,6 +26,10 @@ Also, Supported by ESRI Living Atlas Team and the Johns Hopkins University Appli
 
 Please see John Hopkins [Terms of Use](https://github.com/CSSEGISandData/COVID-19/blob/master/README.md) to understand the limitations and warranties of the data.
 
+## Coronavirus COVID-19 (2019-nCoV) Data Repository for South Africa
+
+https://github.com/dsfsi/covid19za
+
 # resources
 
 + https://github.com/d3/d3-array
