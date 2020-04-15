@@ -143,8 +143,8 @@ function vis(d,key) {
   const showSqrt = d3.select("#scale").property("checked")
   const factor = showSqrt ? 1 : 1
   const watermark = d3.max(data.series, d => d3.median(d.values)) / factor
-  width = 600
-  height = 600
+  width = 800
+  height = 500
   margin = ({top: 20, right: 50, bottom: 30, left: 20})
   let x = d3.scaleUtc()
     .domain(d3.extent(data.dates))
