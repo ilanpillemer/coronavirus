@@ -86,7 +86,7 @@ function hover(svg, path, data, x, y) {
 
     xline = d3.line()([
      [0,0],
-     [width-x(data.dates[i]) , 0]
+     [width - margin.right - margin.right  -x(data.dates[i]) , 0]
     ])
 
     yline = d3.line()([
@@ -151,12 +151,12 @@ function vis(d,key) {
     .range([margin.left, width - margin.right])
 
    let y = showSqrt ?
-    d3.scaleSqrt()
-    .domain([0, d3.max(data.series, d => d3.max(d.values))]).nice()
+    d3.scaleLog().clamp(true)
+    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
    :
      d3.scaleLinear()
-    .domain([0, d3.max(data.series, d => d3.max(d.values))]).nice()
+    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
 
 
@@ -165,9 +165,11 @@ function vis(d,key) {
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
 
+    let yformat = d3.format(",.0f")
+
     yAxis = g => g
     .attr("transform", `translate(${width-margin.right+2},0)`)
-    .call(d3.axisRight(y))
+    .call(d3.axisRight(y).ticks(5).tickFormat(d3.format(",.0f")))
     .call(g => g.select(".domain").remove())
     .call(g => g.select(".tick:last-of-type text").clone()
         .attr("x", -width/2)
