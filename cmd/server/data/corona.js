@@ -19,8 +19,18 @@ function render() {
  // d3.csv(confirmed_US, data => {return {data}}).then(data => vis(data,"confirmed_US"))
 }
 
-function hello() {
+function selectall() {
   console.log("hello")
+  d3.selectAll("option.country")
+   .property("selected",true)
+      M.AutoInit();
+}
+
+function deselectall() {
+  console.log("hello")
+  d3.selectAll("option.country")
+   .property("selected",false)
+      M.AutoInit();
 }
 
 function hover(svg, path, data, x, y) {
@@ -148,6 +158,22 @@ function vis(d,key) {
     })
    .attr("value",d => d.name)
    .html(d => d.name)
+
+//  const lbl =  d3
+//  .select("div.countriesv2")
+//  .selectAll("label.country")
+//  .data(data.series)
+//  .enter() //only runs once as data series doesnt change
+//  .append("label")
+//
+//  lbl.append("input")
+//    .classed("country",true)
+//    .attr("type","checkbox")
+//    .classed("filled-in", true)
+//   lbl.append("span")
+//  .html(d => d.name)
+
+
    M.AutoInit();
 
 

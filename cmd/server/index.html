@@ -33,7 +33,7 @@
     <!-- Page Layout here -->
     <div class="blue lighten-4"><div class="row" >
 
-      <div class="col l2 s2">
+      <div class="col s2">
         <!-- Grey navigation panel -->
         	  <!-- Switch -->
         	  <h5>controls</h5>
@@ -48,7 +48,7 @@
 	  </div>
 	  </div>
 	  <div class="row">
-	  <div class="input-field col s12">
+	  <div class="input-field ">
 	    <select multiple class="countries">
 	      <option value="" disabled selected>Select Countries</option>
 	    </select>
@@ -61,15 +61,28 @@
 		    <i class="material-icons right">send</i>
 		  </button>
             </div>
+            <br />
+               <div class="row">
+             <div class="center">
+		   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="selectall()">select all
+		  </button>
+            </div>
+            </div>
+                <div class="row">
+             <div class="center">
+		   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="deselectall()">deselect all
+		  </button>
+            </div>
+            </div>
            </div>
            <div class="row">
            <div class="countriesv2">
-<!--	        Looking at different version now where all checkboxes just display.. probs better ui
-                   <label class="country">
+<!--	        Looking at different version now where all checkboxes just display
+                 <label class="country">
 	        <input type="checkbox" class="filled-in"  />
 	        <span>Filled in</span>
-	      </label>
-	                             -->
+	      </label> sadly seems just too many.. not sure about this -->
+
            </div>
            </div>
       </div>
