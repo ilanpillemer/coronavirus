@@ -58,7 +58,27 @@ function hover(svg, path, data, x, y) {
       .attr("y", -20);
 
  dot.append("path")
-       .classed("xgrid",true)
+       .classed("x1grid",true)
+       .attr("fill", "none")
+       .style("stroke-dasharray", ("3, 3"))
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+ ;
+
+  dot.append("path")
+       .classed("x2grid",true)
+       .attr("fill", "none")
+       .style("stroke-dasharray", ("3, 3"))
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+
+
+ dot.append("path")
+       .classed("y1grid",true)
        .attr("fill", "none")
        .style("stroke-dasharray", ("3, 3"))
       .attr("stroke", "steelblue")
@@ -68,7 +88,7 @@ function hover(svg, path, data, x, y) {
  ;
 
  dot.append("path")
-       .classed("ygrid",true)
+       .classed("y2grid",true)
        .attr("fill", "none")
        .style("stroke-dasharray", ("3, 3"))
       .attr("stroke", "steelblue")
@@ -94,22 +114,37 @@ function hover(svg, path, data, x, y) {
     shortdate = formatter(data.dates[i] )
     dot.select("text").text(s.name +  " " + s.values[i] + " " + shortdate);
 
-    xline = d3.line()([
+    x1line = d3.line()([
      [0,0],
      [width - margin.right - margin.right  -x(data.dates[i]) , 0]
     ])
 
-    yline = d3.line()([
+    x2line = d3.line()([
+     [0,0],
+     [-x(data.dates[i]) + margin.left , 0]
+    ])
+
+    y1line = d3.line()([
      [0,0],
      [ 0, height-y(s.values[i]) - margin.bottom]
     ])
 
-      dot.select("path.xgrid")
-//       .style("mix-blend-mode", null).attr("stroke", "#ddd")
-      .attr("d", xline)
+    y2line = d3.line()([
+     [0,0],
+     [ 0, -y(s.values[i]) + margin.top]
+    ])
 
-     dot.select("path.ygrid")
-      .attr("d", yline);
+      dot.select("path.x1grid")
+      .attr("d", x1line)
+
+      dot.select("path.x2grid")
+      .attr("d", x2line)
+
+     dot.select("path.y1grid")
+      .attr("d", y1line);
+
+    dot.select("path.y2grid")
+      .attr("d", y2line);
   }
 
   function entered() {
