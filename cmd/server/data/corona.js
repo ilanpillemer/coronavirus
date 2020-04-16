@@ -311,7 +311,7 @@ function vis(d,key) {
         .attr("font-weight", "bold")
         .text(data.y))
 
-        line = d3.line().curve(d3.curveCardinal)
+        line = d3.line().curve(d3.curveMonotoneX)
     .defined(d => !isNaN(d) )
     .x((d, i) => x(data.dates[i]))
     .y(d => y(d))
