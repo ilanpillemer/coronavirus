@@ -12,7 +12,7 @@ function render() {
   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 
   //daily change rather than daily cumulative
-  daily = "daily.csv"  // temporary test csv for now
+  daily = "corona/daily.csv"  // temporary test csv for now
 
    // d3.csv(daily, data => {return {data}}).then(data => visDaily(data,"daily"))
 
