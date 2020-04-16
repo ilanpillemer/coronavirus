@@ -11,23 +11,34 @@ function render() {
   deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
 
+  //daily change rather than daily cumulative
+  daily = "daily.csv"  // temporary test csv for now
+
+   // d3.csv(daily, data => {return {data}}).then(data => visDaily(data,"daily"))
+
+   d3.csv(daily, d => {
+       //console.log(d)
+       return {
+	    Day: d.Day,
+	    name: d.Country_Region + " " + d.Province_State,
+	    active: d.Active
+	  };
+     }).then(data => vis(data,"daily"))
+
   d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
   d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
   d3.select("#scale").on("change", render) ;
- // d3.csv(deceased_US, data => {return {data}}).then(data => vis(data,"deceased_US"))
- // d3.csv(confirmed_US, data => {return {data}}).then(data => vis(data,"confirmed_US"))
 }
 
 function selectall() {
-  console.log("hello")
   d3.selectAll("option.country")
    .property("selected",true)
       M.AutoInit();
 }
 
 function deselectall() {
-  console.log("hello")
+  //console.log("hello")
   d3.selectAll("option.country")
    .property("selected",false)
       M.AutoInit();
@@ -158,13 +169,55 @@ function hover(svg, path, data, x, y) {
   }
 }
 
-//var gdata
+function cleanData(d,key) {
+	if (key == "daily") {
+		return cleanDaily(d,key)
+	} else {
+		return cleanGlobal(d,key)
+	}
+}
 
-function vis(d,key) {
+function cleanDaily(incoming,key) {
+	columns = []
+	series = []
+
+	  d = d3.group(incoming, d => d.name)
+	  var first = true
+	  d.forEach( e => {
+	    item = {}
+	    values = []
+	    e.forEach ( f => {
+	        item.name = f.name
+	        if (first) columns.push(f.Day.replace("2020","20").replaceAll("-","/"))
+	        values.push(+(f.active))
+	      })
+	      first = false
+	      item.values = values
+	      series.push(item)
+	    });
+
+	// hack for now until including US data
+	item = {}
+	item.name = "US "
+	item.values = series[0].values.map(d => 0)
+	series.push(item)
+	//
+	var data = {
+		y : "active cases",
+		series: series,
+		dates: columns.map(d3.utcParse("%m/%d/%Y"))
+	}
+  return data
+}
+
+
+
+function cleanGlobal(d,key) {
   // turn the data into a what d3 expects for time series
   var columns = key === "deceased_US" ? d.columns.slice(12): d.columns.slice(4);
   columns = columns.map(c => c.replace("2020","20"))
-
+ //console.log("cos",columns)
+ //console.log("d",d)
   var data = {
     y: key ,
     series: d.map(e => ({
@@ -173,12 +226,14 @@ function vis(d,key) {
     })),
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
+  return data
+}
 
-
-
-
-
-// setup checkboxes
+function vis(d,key) {
+   // console.log(key)
+   data =  cleanData(d,key)
+  // console.log(data)
+  // setup checkboxes
   const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
 
    d3
@@ -217,7 +272,7 @@ function vis(d,key) {
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
-  console.log(data.series)
+  //console.log(data.series)
 
   const showSqrt = d3.select("#scale").property("checked")
   const factor = showSqrt ? 1 : 1

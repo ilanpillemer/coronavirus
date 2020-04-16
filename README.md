@@ -33,6 +33,7 @@ https://github.com/dsfsi/covid19za
 # resources
 
 + https://github.com/d3/d3-array
++ https://github.com/d3/d3-array/blob/master/README.md#group
 + https://github.com/d3/d3/blob/master/API.md
 + https://github.com/d3/d3/wiki/Tutorials
 + https://bl.ocks.org
