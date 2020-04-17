@@ -3,6 +3,15 @@
 
 function render() {
 //initalise for materialize see https://materializecss.com/select.html
+//chrome sucks and doesnt have replaceAll
+if (typeof "".replaceAll !== "function"){
+	String.prototype.replaceAll = function(search, replacement) {
+	    var target = this;
+	    return target.replace(new RegExp(search, 'g'), replacement);
+	};
+}
+
+
 
   console.log("starting rendering")
   confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
