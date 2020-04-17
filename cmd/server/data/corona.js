@@ -276,7 +276,7 @@ function vis(d,key) {
   //console.log(data.series)
 
   const showSqrt = d3.select("#scale").property("checked")
-  const factor = showSqrt ? 1 : 1
+  const factor = showSqrt ? 4 : 4
   const watermark = d3.max(data.series, d => d3.median(d.values)) / factor
   width = 800
   height = 500
