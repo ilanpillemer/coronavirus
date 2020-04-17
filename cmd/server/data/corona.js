@@ -19,8 +19,8 @@ if (typeof "".replaceAll !== "function"){
   deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+ d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
-  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
 
   //daily change rather than daily cumulative
@@ -236,14 +236,8 @@ function cleanGlobal(d,key) {
     })),
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
-  return data
-}
 
-function vis(d,key) {
-   // console.log(key)
-   data =  cleanData(d,key)
-  // console.log(data)
-  // setup checkboxes
+    // setup checkboxes
   const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
 
    d3
@@ -275,6 +269,15 @@ function vis(d,key) {
 
 
    M.AutoInit();
+
+  return data
+}
+
+function vis(d,key) {
+   // console.log(key)
+   data =  cleanData(d,key)
+  // console.log(data)
+
 
 
    //get all selected
