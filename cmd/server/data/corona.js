@@ -10,6 +10,9 @@ function render() {
   deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
+  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
+  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
 
   //daily change rather than daily cumulative
   daily = "corona/daily.csv"  // temporary test csv for now
@@ -25,9 +28,7 @@ function render() {
 	  };
      }).then(data => vis(data,"daily"))
 
-  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
-  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
-  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
+
   d3.select("#scale").on("change", render) ;
 }
 
