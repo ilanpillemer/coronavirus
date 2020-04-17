@@ -1,6 +1,7 @@
 
 // visualisation based on example at "https://observablehq.com/@d3/multi-line-chart"
 
+var hasInit = false
 function render() {
 //initalise for materialize see https://materializecss.com/select.html
 //chrome sucks and doesnt have replaceAll
@@ -14,30 +15,36 @@ if (typeof "".replaceAll !== "function"){
 
 
   console.log("starting rendering")
+
+
   confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
   confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
   deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
   deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
   recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
- d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
+  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
   d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
   d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
+  d3.csv(deceased, data => {return {data}}).then(data => {
+    vis(data,"deceased_delta")
+    //hack
+             //only run this after previous have run..
+             //to do fix hack so that order does not matter
+	   daily = "corona/daily.csv"  // temporary test csv for now
+	    d3.csv(daily, d => {
+	       //console.log("testing",d)
+	       return {
+		    Day: d.Day,
+		    name: d.Country_Region + " " + d.Province_State,
+		    active: d.Active
+		  };
+	     }).then(data => vis(data,"daily"))
+    //end hack
+    })
 
-  //daily change rather than daily cumulative
-  daily = "corona/daily.csv"  // temporary test csv for now
-
-   // d3.csv(daily, data => {return {data}}).then(data => visDaily(data,"daily"))
-
-   d3.csv(daily, d => {
-       //console.log(d)
-       return {
-	    Day: d.Day,
-	    name: d.Country_Region + " " + d.Province_State,
-	    active: d.Active
-	  };
-     }).then(data => vis(data,"daily"))
 
 
+  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed_delta"))
   d3.select("#scale").on("change", render) ;
 }
 
@@ -237,6 +244,14 @@ function cleanGlobal(d,key) {
    dates: columns.map(d3.utcParse("%m/%d/%Y"))
   }
 
+  if (key.includes("delta")) {
+    data.series.forEach( d=> {
+      previous = d.values.slice(0)
+      previous.unshift(0)
+      d.values = d.values.map( (e,i) => previous[i+1] - previous[i] )
+   })
+  }
+
     // setup checkboxes
   const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
 
@@ -252,6 +267,7 @@ function cleanGlobal(d,key) {
     })
    .attr("value",d => d.name)
    .html(d => d.name)
+   M.AutoInit();
 
 //  const lbl =  d3
 //  .select("div.countriesv2")
@@ -266,26 +282,18 @@ function cleanGlobal(d,key) {
 //    .classed("filled-in", true)
 //   lbl.append("span")
 //  .html(d => d.name)
-
-
-   M.AutoInit();
-
   return data
 }
 
 function vis(d,key) {
    // console.log(key)
    data =  cleanData(d,key)
-  // console.log(data)
-
-
 
    //get all selected
   const selectedCountries = $('select.countries').val()
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
-  //console.log(data.series)
 
   const showSqrt = d3.select("#scale").property("checked")
   const factor = showSqrt ? 4 : 4
@@ -324,8 +332,8 @@ function vis(d,key) {
         .attr("font-weight", "bold")
         .text(data.y))
 
-        line = d3.line().curve(d3.curveMonotoneX)
-    .defined(d => !isNaN(d) )
+        line = d3.line()//.curve(d3.curveMonotoneX)
+    .defined( d => !isNaN(d) )
     .x((d, i) => x(data.dates[i]))
     .y(d => y(d))
 
