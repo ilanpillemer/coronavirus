@@ -310,7 +310,7 @@ function vis(d,key) {
     .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
    :
-     d3.scaleLinear()
+     d3.scaleLinear().clamp(true)
     .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
 
