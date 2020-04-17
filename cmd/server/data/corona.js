@@ -236,7 +236,7 @@ function cleanGlobal(d,key) {
  //console.log("cos",columns)
  //console.log("d",d)
   var data = {
-    y: key ,
+    y: key.replace("_delta"," per day") ,
     series: d.map(e => ({
       name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
       values: columns.map(k => +e.data[k])
