@@ -135,7 +135,7 @@ function hover(svg, path, data, x, y, c) {
     var i0 = i1 - 1;
     var i = xm - data.dates[i0] > data.dates[i1] - xm ? i1 : i0;
     var s = d3.least(data.series, d => Math.abs(d.values[i] - ym));
-    path.attr("stroke", d => d === s ? null : "#ddd").filter(d => d === s).raise();
+    path.attr("stroke", d => d === s ? null : "#ddd")//.filter(d => d === s).raise();
     dot.attr("transform", `translate(${x(data.dates[i])},${y(s.values[i])})`);
 
     var formatter = d3.timeFormat("%d %b")
