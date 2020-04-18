@@ -371,7 +371,7 @@ function vis(d,key) {
   const path = svg.append("g")
       .attr("id","paths")
       .attr("fill", "none")
-//      .attr("stroke", "steelblue")
+     .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
