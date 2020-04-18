@@ -1,6 +1,5 @@
 
 // visualisation based on example at "https://observablehq.com/@d3/multi-line-chart"
-
 var hasInit = false
 function render() {
 //initalise for materialize see https://materializecss.com/select.html
@@ -62,13 +61,13 @@ function deselectall() {
       M.AutoInit();
 }
 
-function hover(svg, path, data, x, y) {
+function hover(svg, path, data, x, y, c) {
 
   if ("ontouchstart" in document) svg
-      .style("-webkit-tap-highlight-color", "transparent")
-      .on("touchmove", moved)
-      .on("touchstart", entered)
-      .on("touchend", left)
+//      .style("-webkit-tap-highlight-color", "transparent")
+//      .on("touchmove", moved)
+//      .on("touchstart", entered)
+//      .on("touchend", left)
   else svg
       .on("mousemove", moved)
       .on("mouseenter", entered)
@@ -181,11 +180,21 @@ function hover(svg, path, data, x, y) {
     dot.attr("display", null);
   }
 
+function  reloadcolors() {
+     svg.select("g#paths")
+       .selectAll("path")
+       .data(data.series)
+       .attr("stroke",d => c(d.name))
+  }
+
   function left() {
-    path.style("mix-blend-mode", "multiply").attr("stroke", null);
+    path.style("mix-blend-mode", "multiply")
+    reloadcolors()
     dot.attr("display", "none");
   }
 }
+
+
 
 function cleanData(d,key) {
 	if (key == "daily") {
@@ -295,7 +304,7 @@ function vis(d,key) {
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
-
+  const c = d3.scaleOrdinal(d3.schemeCategory10).domain(selectedCountries)
   const showSqrt = d3.select("#scale").property("checked")
   const factor = showSqrt ? 4 : 4
   const watermark = d3.max(data.series, d => d3.median(d.values)) / factor
@@ -362,7 +371,7 @@ function vis(d,key) {
   const path = svg.append("g")
       .attr("id","paths")
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
+//      .attr("stroke", "steelblue")
       .attr("stroke-width", 1.5)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
@@ -371,7 +380,10 @@ function vis(d,key) {
     .join("path")
       .attr("name",d.name)
       .style("mix-blend-mode", "multiply")
-      .attr("d", d => line(d.values));
+      .attr("stroke", d => {
+      	return c(d.name)
+      })
+      .attr("d", d => line(d.values))
 
      svg.append("g")
             .attr("id","dots")
@@ -399,6 +411,6 @@ function vis(d,key) {
              return +(d.values[d.values.length-1]) > watermark ? d.name : ""
            } )
 
-  svg.call(hover, path, data, x, y);
+  svg.call(hover, path, data, x, y, c);
 
 }
