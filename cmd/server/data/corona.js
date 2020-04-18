@@ -135,7 +135,7 @@ function hover(svg, path, data, x, y, c) {
     var i0 = i1 - 1;
     var i = xm - data.dates[i0] > data.dates[i1] - xm ? i1 : i0;
     var s = d3.least(data.series, d => Math.abs(d.values[i] - ym));
-    path.attr("stroke", d => d === s ? null : "#ddd")//.filter(d => d === s).raise();
+    path.attr("stroke", d => d === s ? c(s.name) : "#ddd").filter(d => d === s).raise();
     dot.attr("transform", `translate(${x(data.dates[i])},${y(s.values[i])})`);
 
     var formatter = d3.timeFormat("%d %b")
@@ -183,7 +183,7 @@ function hover(svg, path, data, x, y, c) {
 function  reloadcolors() {
      svg.select("g#paths")
        .selectAll("path")
-       .data(data.series)
+       .data(data.series, d => d.name)
        .attr("stroke",d => c(d.name))
   }
 
@@ -268,7 +268,7 @@ function cleanGlobal(d,key) {
    d3
   .select("select.countries")
   .selectAll("option.country")
-  .data(data.series)
+  .data(data.series, d => d.name)
   .enter() //only runs once as data series doesnt change
   .append("option")
   .classed("country",true)
@@ -376,7 +376,7 @@ function vis(d,key) {
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round")
     .selectAll("path")
-    .data(data.series)
+    .data(data.series, d => d.name)
     .join("path")
       .attr("name",d.name)
       .style("mix-blend-mode", "multiply")
@@ -388,7 +388,7 @@ function vis(d,key) {
      svg.append("g")
             .attr("id","dots")
            .selectAll("circle")
-           .data(data.series)
+           .data(data.series, d => d.name)
            .enter()
            .append("circle")
            .attr("r", 1.0)
