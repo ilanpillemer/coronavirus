@@ -3,42 +3,69 @@
 var hasInit = false
 var lookup = {}
 
-function init() {
+async function init() {
          console.log("initialising")
-
 	if (typeof "".replaceAll !== "function"){
 		String.prototype.replaceAll = function(search, replacement) {
 		    var target = this;
 		    return target.replace(new RegExp(search, 'g'), replacement);
 		};
 	}
+	// lookup data
+	lookup = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv"
+	setUp(await d3.csv(lookup, data => {return {data}}))
 	hasInit = true
 }
 
-
-function render() {
-
-if (!hasInit) {
- init()
+function extractKey(d) {
+	return d.data.Country_Region + " " + d.data.Province_State
 }
 
-//initalise for materialize see https://materializecss.com/select.html
-//chrome sucks and doesnt have replaceAll
-M.AutoInit();
-  console.log("starting rendering")
-  confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-//  confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
-  deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-//  deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
-  recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
-  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
-  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
-  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
-  d3.csv(deceased, data => {return {data}}).then(data => {
-    vis(data,"deceased_delta")
-    //hack
-             //only run this after previous have run..
-             //to do fix hack so that order does not matter
+async function setUp(data) {
+	    // setup checkboxes
+	  const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
+	   d3
+	  .select("select.countries")
+	  .selectAll("option.country")
+	  .data(data.filter(d=> {
+	  		  console.log(d.data.iso2 !== "US" )
+			  return d.data.Country_Region !== "US" || d.data.UID == "840"
+			  })
+		  , d => extractKey(d))
+	  .enter() //only runs once as data series doesnt change
+	  .append("option")
+	  .classed("country",true)
+	  .property("selected",d => {
+	      return defaultCountries.includes(extractKey(d))
+	    })
+	   .attr("value",d => extractKey(d))
+	   .html(d => extractKey(d))
+	   M.AutoInit();
+}
+
+
+async function render() {
+	if (!hasInit) {
+		await init()
+	}
+
+	//initalise for materialize see https://materializecss.com/select.html
+	//chrome sucks and doesnt have replaceAll
+	M.AutoInit();
+	  console.log("starting rendering")
+	  confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
+	//  confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
+	  deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
+	//  deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
+	  recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+	  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
+	  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
+	  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
+	  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased_delta"))
+	  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed_delta"))
+	  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered_delta"))
+
+	  // daily figures
 	   daily = "corona/daily.csv"  // temporary test csv for now
 	    d3.csv(daily, d => {
 	       //console.log("testing",d)
@@ -48,14 +75,9 @@ M.AutoInit();
 		    active: d.Active
 		  };
 	     }).then(data => vis(data,"daily"))
-    //end hack
-    })
 
+	  d3.select("#scale").on("change", render)
 
-
-  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed_delta"))
-  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered_delta"))
-  d3.select("#scale").on("change", render) ;
 }
 
 function selectall() {
@@ -322,22 +344,7 @@ function cleanGlobal(d,key) {
    })
   }
 
-    // setup checkboxes
-  const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
 
-   d3
-  .select("select.countries")
-  .selectAll("option.country")
-  .data(data.series, d => d.name)
-  .enter() //only runs once as data series doesnt change
-  .append("option")
-  .classed("country",true)
-  .property("selected",d => {
-      return defaultCountries.includes(d.name)
-    })
-   .attr("value",d => d.name)
-   .html(d => d.name)
-   M.AutoInit();
 
 //  const lbl =  d3
 //  .select("div.countriesv2")
