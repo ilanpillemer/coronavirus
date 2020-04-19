@@ -28,7 +28,6 @@ async function setUp(data) {
 	  .select("select.countries")
 	  .selectAll("option.country")
 	  .data(data.filter(d=> {
-	  		  console.log(d.data.iso2 !== "US" )
 			  return d.data.Country_Region !== "US" || d.data.UID == "840"
 			  })
 		  , d => extractKey(d))
@@ -42,7 +41,6 @@ async function setUp(data) {
 	   .html(d => extractKey(d))
 	   M.AutoInit();
 }
-
 
 async function render() {
 	if (!hasInit) {
@@ -77,7 +75,6 @@ async function render() {
 	     }).then(data => vis(data,"daily"))
 
 	  d3.select("#scale").on("change", render)
-
 }
 
 function selectall() {
