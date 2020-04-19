@@ -5,6 +5,7 @@ var population = new Map()
 
 async function init() {
          console.log("initialising")
+         // add replaceAll for browsers that dont support it
 	if (typeof "".replaceAll !== "function"){
 		String.prototype.replaceAll = function(search, replacement) {
 		    var target = this;
@@ -50,7 +51,6 @@ async function render() {
 		await init()
 	}
 	//initalise for materialize see https://materializecss.com/select.html
-	//chrome sucks and doesnt have replaceAll
 	M.AutoInit();
 	  console.log("starting rendering")
 	  confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
@@ -232,14 +232,10 @@ function cleanData(d,key) {
 	if (key == "daily") {
 		return cleanDaily(d,key)
 	}
-
 	if (key.includes("delta")) {
 	         return cleanGlobalAveraged(d,key)
 	}
-
-
 	return cleanGlobal(d,key)
-
 }
 
 function cleanDaily(incoming,key) {
@@ -261,17 +257,12 @@ function cleanDaily(incoming,key) {
 	      series.push(item)
 	    });
 
-	// hack for now until including US data
-	item = {}
-	item.name = "US "
-	item.values = series[0].values.map(d => 0)
-	series.push(item)
-	//
 	var data = {
 		y : "active cases",
 		series: series,
 		dates: columns.map(d3.utcParse("%m/%d/%Y"))
 	}
+
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised)"
     data.series.forEach( d=> {
