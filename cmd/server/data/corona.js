@@ -1,7 +1,7 @@
 
 // visualisation based on example at "https://observablehq.com/@d3/multi-line-chart"
 var hasInit = false
-var lookup = {}
+var population = new Map()
 
 async function init() {
          console.log("initialising")
@@ -38,7 +38,10 @@ async function setUp(data) {
 	      return defaultCountries.includes(extractKey(d))
 	    })
 	   .attr("value",d => extractKey(d))
-	   .html(d => extractKey(d))
+	   .html(d => {
+		   population.set(extractKey(d), d.data.Population)
+		   return extractKey(d)
+		   })
 	   M.AutoInit();
 }
 
@@ -46,7 +49,6 @@ async function render() {
 	if (!hasInit) {
 		await init()
 	}
-
 	//initalise for materialize see https://materializecss.com/select.html
 	//chrome sucks and doesnt have replaceAll
 	M.AutoInit();
@@ -74,7 +76,8 @@ async function render() {
 		  };
 	     }).then(data => vis(data,"daily"))
 
-	  d3.select("#scale").on("change", render)
+	d3.select("#scale").on("change", render)
+	d3.select("#normalise").on("change", render)
 }
 
 function selectall() {
@@ -234,6 +237,7 @@ function cleanData(d,key) {
 	         return cleanGlobalAveraged(d,key)
 	}
 
+
 	return cleanGlobal(d,key)
 
 }
@@ -268,6 +272,11 @@ function cleanDaily(incoming,key) {
 		series: series,
 		dates: columns.map(d3.utcParse("%m/%d/%Y"))
 	}
+  if (d3.select("#normalise").property("checked")) {
+    data.series.forEach( d=> {
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
+   })
+  }
   return data
 }
 
@@ -296,6 +305,12 @@ function cleanGlobalAveraged(d,key,period) {
       previous = d.values.slice(0)
       previous.unshift(0)
       d.values = d.values.map( (e,i) => previous[i+1] - previous[i] )
+   })
+  }
+
+  if (d3.select("#normalise").property("checked")) {
+    data.series.forEach( d=> {
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
    })
   }
 
@@ -341,7 +356,11 @@ function cleanGlobal(d,key) {
    })
   }
 
-
+  if (d3.select("#normalise").property("checked")) {
+    data.series.forEach( d=> {
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
+   })
+  }
 
 //  const lbl =  d3
 //  .select("div.countriesv2")
