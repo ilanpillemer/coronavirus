@@ -1,22 +1,31 @@
 
 // visualisation based on example at "https://observablehq.com/@d3/multi-line-chart"
 var hasInit = false
-function render() {
-//initalise for materialize see https://materializecss.com/select.html
-//chrome sucks and doesnt have replaceAll
-M.AutoInit();
-if (typeof "".replaceAll !== "function"){
-	String.prototype.replaceAll = function(search, replacement) {
-	    var target = this;
-	    return target.replace(new RegExp(search, 'g'), replacement);
-	};
+var lookup = {}
+
+function init() {
+         console.log("initialising")
+
+	if (typeof "".replaceAll !== "function"){
+		String.prototype.replaceAll = function(search, replacement) {
+		    var target = this;
+		    return target.replace(new RegExp(search, 'g'), replacement);
+		};
+	}
+	hasInit = true
 }
 
 
+function render() {
 
+if (!hasInit) {
+ init()
+}
+
+//initalise for materialize see https://materializecss.com/select.html
+//chrome sucks and doesnt have replaceAll
+M.AutoInit();
   console.log("starting rendering")
-
-
   confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
 //  confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
   deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
