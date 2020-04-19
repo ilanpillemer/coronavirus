@@ -4,6 +4,7 @@ var hasInit = false
 function render() {
 //initalise for materialize see https://materializecss.com/select.html
 //chrome sucks and doesnt have replaceAll
+M.AutoInit();
 if (typeof "".replaceAll !== "function"){
 	String.prototype.replaceAll = function(search, replacement) {
 	    var target = this;
@@ -199,9 +200,14 @@ function  reloadcolors() {
 function cleanData(d,key) {
 	if (key == "daily") {
 		return cleanDaily(d,key)
-	} else {
-		return cleanGlobal(d,key)
 	}
+
+	if (key.includes("delta")) {
+	         return cleanGlobalAveraged(d,key)
+	}
+
+	return cleanGlobal(d,key)
+
 }
 
 function cleanDaily(incoming,key) {
@@ -237,6 +243,51 @@ function cleanDaily(incoming,key) {
   return data
 }
 
+
+function cleanGlobalAveraged(d,key,period) {
+  //console.log("averaging")
+  period = + ( $("input#deltaaverage").val() )
+  period = period || 14
+  //console.log(period)
+  // turn the data into a what d3 expects for time series
+  var columns = key === "deceased_US" ? d.columns.slice(12): d.columns.slice(4);
+  columns = columns.map(c => c.replace("2020","20"))
+ //console.log("cos",columns)
+ //console.log("d",d)
+  var data = {
+    y: key.replace("_delta"," per day (new) averaged over " + period + " days") ,
+    series: d.map(e => ({
+      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
+      values: columns.map(k => +e.data[k])
+    })),
+   dates: columns.map(d3.utcParse("%m/%d/%Y"))
+  }
+
+  if (key.includes("delta")) {
+    data.series.forEach( d=> {
+      previous = d.values.slice(0)
+      previous.unshift(0)
+      d.values = d.values.map( (e,i) => previous[i+1] - previous[i] )
+   })
+  }
+
+  //now average out
+	data.series.forEach( d=> {
+	  ghost = d.values.slice(0)
+	  for (let i  = 1; i < period; i++) {
+	   ghost.unshift(0)
+	  }
+	  d.values = d.values.map( (e,i) => {
+	          sum = ghost[i]
+		 for (let j  = 1; j < period; j++) {
+		   sum = sum + ghost[i + j]
+		  }
+		  return ( sum / 3 )
+		  })
+	})
+
+  return data
+}
 
 
 function cleanGlobal(d,key) {
