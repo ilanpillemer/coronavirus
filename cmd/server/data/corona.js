@@ -273,6 +273,7 @@ function cleanDaily(incoming,key) {
 		dates: columns.map(d3.utcParse("%m/%d/%Y"))
 	}
   if (d3.select("#normalise").property("checked")) {
+    data.y = data.y + " (normalised)"
     data.series.forEach( d=> {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
    })
@@ -309,6 +310,7 @@ function cleanGlobalAveraged(d,key,period) {
   }
 
   if (d3.select("#normalise").property("checked")) {
+    data.y = data.y + " (normalised)"
     data.series.forEach( d=> {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
    })
@@ -357,6 +359,7 @@ function cleanGlobal(d,key) {
   }
 
   if (d3.select("#normalise").property("checked")) {
+    data.y = data.y + " (normalised)"
     data.series.forEach( d=> {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
    })
