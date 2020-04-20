@@ -318,7 +318,7 @@ function cleanGlobalAveraged(d,key,period) {
 		 for (let j  = 1; j < period; j++) {
 		   sum = sum + ghost[i + j]
 		  }
-		  return ( sum / 3 )
+		  return ( sum / period )
 		  })
 	})
 
