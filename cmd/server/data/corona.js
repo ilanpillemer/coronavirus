@@ -25,7 +25,7 @@ function extractKey(d) {
 
 async function setUp(data) {
 	    // setup checkboxes
-	  const defaultCountries =  ["US ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
+	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
 	   d3
 	  .select("select.countries")
 	  .selectAll("option.country")
