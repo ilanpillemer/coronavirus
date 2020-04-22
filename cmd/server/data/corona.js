@@ -111,11 +111,17 @@ function hover(svg, path, data, x, y, c) {
   dot.append("circle")
       .attr("r", 2.5);
 
-  dot.append("text")
+  popover = dot.append("text")
       .attr("font-family", "sans-serif")
       .attr("font-size", 8)
+      .attr("font-weight", "bold")
       .attr("text-anchor", "end")
-      .attr("y", -20);
+      .attr("y", -40)
+
+   popover.append("tspan").attr("id","name").attr("x",-5).attr("dy","0.6em")
+   popover.append("tspan").attr("id","quant").attr("x",-5).attr("dy","1.2em")
+   popover.append("tspan").attr("id","day").attr("x",-5).attr("dy","1.8em")
+
 
  dot.append("path")
        .classed("x1grid",true)
@@ -172,7 +178,11 @@ function hover(svg, path, data, x, y, c) {
 
     var formatter = d3.timeFormat("%d %b")
     shortdate = formatter(data.dates[i] )
-    dot.select("text").text(s.name +  " " + s.values[i] + " " + shortdate);
+
+    pretty = d3.format(".2s")
+    dot.select("text").select("tspan#name").html(s.name + " (pop: " + pretty(population.get(s.name)) + ")");
+    dot.select("text").select("tspan#quant").html(d3.format(",")(s.values[i]));
+    dot.select("text").select("tspan#day").html(shortdate);
 
     x1line = d3.line()([
      [0,0],
@@ -318,7 +328,7 @@ function cleanGlobalAveraged(d,key,period) {
 		 for (let j  = 1; j < period; j++) {
 		   sum = sum + ghost[i + j]
 		  }
-		  return ( sum / period )
+		  return ( Math.round(sum / period ))
 		  })
 	})
 
