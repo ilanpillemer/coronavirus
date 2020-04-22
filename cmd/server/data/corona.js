@@ -2,6 +2,7 @@
 // visualisation based on example at "https://observablehq.com/@d3/multi-line-chart"
 var hasInit = false
 var population = new Map()
+var iso2 = new Map()
 
 async function init() {
          console.log("initialising")
@@ -41,6 +42,7 @@ async function setUp(data) {
 	   .attr("value",d => extractKey(d))
 	   .html(d => {
 		   population.set(extractKey(d), d.data.Population)
+		   iso2.set(extractKey(d), d.data.iso2)
 		   return extractKey(d)
 		   })
 	   M.AutoInit();
@@ -115,12 +117,18 @@ function hover(svg, path, data, x, y, c) {
       .attr("font-family", "sans-serif")
       .attr("font-size", 8)
       .attr("font-weight", "bold")
-      .attr("text-anchor", "end")
+      .attr("text-anchor", "begin")
+      .attr("x",-70)
       .attr("y", -40)
 
-   popover.append("tspan").attr("id","name").attr("x",-5).attr("dy","0.6em")
-   popover.append("tspan").attr("id","quant").attr("x",-5).attr("dy","1.2em")
-   popover.append("tspan").attr("id","day").attr("x",-5).attr("dy","1.8em")
+   popover.append("tspan").attr("id","name").attr("x",-100).attr("dy","0.6em")
+   popover.append("tspan").attr("id","quant").attr("x",-100).attr("dy","1.2em")
+   popover.append("tspan").attr("id","day").attr("x",-100).attr("dy","1.8em")
+
+   dot.append("image")
+          .attr("id","flag")
+          .attr("y",-60)
+          .attr("x",-100)
 
 
  dot.append("path")
@@ -179,10 +187,13 @@ function hover(svg, path, data, x, y, c) {
     var formatter = d3.timeFormat("%d %b")
     shortdate = formatter(data.dates[i] )
 
+   //console.log(iso2.get(s.name))
+
     pretty = d3.format(".2s")
     dot.select("text").select("tspan#name").html(s.name + " (pop: " + pretty(population.get(s.name)) + ")");
     dot.select("text").select("tspan#quant").html(d3.format(",")(s.values[i]));
     dot.select("text").select("tspan#day").html(shortdate);
+    dot.select("image").attr("href","https://www.countryflags.io/" + iso2.get(s.name) + "/flat/16.png")
 
     x1line = d3.line()([
      [0,0],
