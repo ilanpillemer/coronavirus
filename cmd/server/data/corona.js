@@ -188,6 +188,9 @@ function hover(svg, path, data, x, y, c) {
 
     var formatter = d3.timeFormat("%d %b")
     shortdate = formatter(data.dates[i] )
+    if (d3.select("#normaliseTime").property("checked")) {
+	 shortdate = "Day " + data.dates[i]
+     }
 
    //console.log(iso2.get(s.name))
 
