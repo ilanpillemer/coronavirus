@@ -20,8 +20,11 @@
     <!-- Navbar goes here -->
 	  <nav class="blue">
 	    <div class="nav-wrapper" class="block blue">
-	      <a href="#" class="brand-logo left">COVID-19 Visualisation</a>
+	      <a href="#" class="brand-logo center">COVID-19 Visualisation</a>
 	      <ul id="nav-mobile" class="left hide-on-med-and-down">
+
+	        <li><a class="waves-effect waves-light btn-small"
+	                 href="https://github.com/sponsors/ilanpillemer" ><i class="material-icons left">favorite</i>sponsor</a></li>
 	      <!--
 	        <li><a href="sass.html">Sass</a></li>
 	        <li><a href="badges.html">Components</a></li>
@@ -38,14 +41,16 @@
         	  <!-- Switch -->
         	  <h5>controls</h5>
         	  <div class="row">
-	  <div class="switch left" >
-	    <label>
-	      Linear
-	      <input type="checkbox" id="scale">
-	      <span class="lever"></span>
-	      Log
-	    </label>
-	  </div>
+	        	  <div class="col">
+			  <div class="switch left" >
+			    <label>
+			      Linear
+			      <input type="checkbox" id="scale">
+			      <span class="lever"></span>
+			      Log
+			    </label>
+			  </div>
+		  </div>
 	  </div>
         	  <div class="row">
 	        	  <div class="col">
@@ -60,59 +65,69 @@
 		  </div>
 	  </div>
         	  <div class="row">
-		  <div class="switch left" >
-		    <label>
-		      Actual Dates
-		      <input type="checkbox" id="normaliseTime">
-		      <span class="lever"></span>
-		      From Day 1  with a count of N
-		    </label>
-		  </div>
+        	  	<div class="col">
+			  <div class="switch left" >
+			    <label>
+			      Actual Dates
+			      <input type="checkbox" id="normaliseTime">
+			      <span class="lever"></span>
+			      From Day 1  with a count of N
+			    </label>
+			  </div>
+		</div>
 	  </div>
 	  <div class="row">
-	  <div class="input-field ">
-	    <select multiple class="countries">
-	      <option value="" disabled selected>Select Countries</option>
-	    </select>
-	    <label>Filter Countries</label>
-	  </div>
-           </div>
-
+		  <div class="col">
+			  <div class="input-field ">
+			    <select multiple class="countries">
+			      <option value="" disabled selected>Select Countries</option>
+			    </select>
+			    <label>Filter Countries</label>
+			  </div>
+	           </div>
+	</div>
       <div class="row">
-        <div class="input-field">
-          <input value="14" id="deltaaverage" type="text" class="validate">
-          <label for="email">daily delta average</label>
-          <span class="helper-text" data-error="invalid value, please put a reasonable number" >change the averaging of the daily counts (deceased, confirmed, recovered)</span>
-        </div>
+	      <div class="col">
+		        <div class="input-field">
+		          <input value="14" id="deltaaverage" type="text" class="validate">
+		          <label for="email">daily delta average</label>
+		          <span class="helper-text" data-error="invalid value, please put a reasonable number" >change the averaging of the daily counts (deceased, confirmed, recovered)</span>
+		        </div>
+	      </div>
       </div>
       <div class="row">
-        <div class="input-field">
-          <input value="10" id="dayshift" type="text" class="validate">
-          <label for="dayshift">Day 1 Count</label>
-          <span class="helper-text" data-error="invalid value, please put a reasonable number" >Number of events to normalise as Day 1</span>
-        </div>
+	      <div class="col">
+		        <div class="input-field">
+		          <input value="10" id="dayshift" type="text" class="validate">
+		          <label for="dayshift">Day 1 Count</label>
+		          <span class="helper-text" data-error="invalid value, please put a reasonable number" >Number of events to normalise as Day 1</span>
+		        </div>
+	      </div>
       </div>
 
            <div class="row">
-           <div class="center">
-		   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="render()" id="filterButton">Apply Filter
-		    <i class="material-icons right">send</i>
-		  </button>
+   	        <div class="col">
+	 	          <div class="left">
+				   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="render()" id="filterButton">Apply Filter
+				    <i class="material-icons right">send</i>
+				  </button>
+		            </div>
+		    </div>
+	    </div>
+             <div class="row">
+             <div class="col">
+	             <div class="left">
+			   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="selectall()">select all
+			  </button>
+	            </div>
             </div>
-            <br />
-               <div class="row">
-             <div class="center">
-		   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="selectall()">select all
-		  </button>
+            <div class="col">
+     	        <div class="left">
+			   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="deselectall()">deselect all
+			  </button>
+	       </div>
             </div>
             </div>
-                <div class="row">
-             <div class="center">
-		   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="deselectall()">deselect all
-		  </button>
-            </div>
-            </div>
-           </div>
            <div class="row">
            <div class="countriesv2">
 <!--	        Looking at different version now where all checkboxes just display
