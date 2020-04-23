@@ -48,14 +48,26 @@
 	  </div>
 	  </div>
         	  <div class="row">
-	  <div class="switch left" >
-	    <label>
-	      Actual Numbers
-	      <input type="checkbox" id="normalise">
-	      <span class="lever"></span>
-	      Normalised  (div by pop, multiplied 100k)
-	    </label>
+	        	  <div class="col">
+			  <div class="switch left" >
+			    <label>
+			      Actual Numbers
+			      <input type="checkbox" id="normalise">
+			      <span class="lever"></span>
+			      Normalised  (div by pop, multiplied 100k)
+			    </label>
+			  </div>
+		  </div>
 	  </div>
+        	  <div class="row">
+		  <div class="switch left" >
+		    <label>
+		      Actual Dates
+		      <input type="checkbox" id="normaliseTime">
+		      <span class="lever"></span>
+		      From Day 1  with a count of N
+		    </label>
+		  </div>
 	  </div>
 	  <div class="row">
 	  <div class="input-field ">
@@ -71,6 +83,13 @@
           <input value="14" id="deltaaverage" type="text" class="validate">
           <label for="email">daily delta average</label>
           <span class="helper-text" data-error="invalid value, please put a reasonable number" >change the averaging of the daily counts (deceased, confirmed, recovered)</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <input value="100" id="dayshift" type="text" class="validate">
+          <label for="dayshift">Day 1 Count</label>
+          <span class="helper-text" data-error="invalid value, please put a reasonable number" >Number of events to normalise as Day 1</span>
         </div>
       </div>
 
@@ -127,6 +146,7 @@
                 <h5 class="white-text">NB</h5>
                 <p class="grey-text text-lighten-4">
                 <p>Please note that currently US data for active cases is not loaded. Active case information also is only available from the 23rd of March.</p>
+                <p>Please also note becasue active case information also is only available from the 23rd of March you would need to signficantly increase N to normalise Day 1 for this graph.</p>
                 The Website relies upon publicly available data from multiple sources, that do not always agree.
 	Any and all representations and warranties with respect to the Website, including accuracy, fitness for use, and merchantability are hereby disclaimed.
 	Reliance on the Website for medical guidance or use of the Website in commerce is strictly prohibited.

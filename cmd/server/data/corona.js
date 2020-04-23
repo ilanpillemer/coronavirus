@@ -4,6 +4,7 @@ var hasInit = false
 var population = new Map()
 var iso2 = new Map()
 
+
 async function init() {
          console.log("initialising")
          // add replaceAll for browsers that dont support it
@@ -80,6 +81,7 @@ async function render() {
 
 	d3.select("#scale").on("change", render)
 	d3.select("#normalise").on("change", render)
+	d3.select("#normaliseTime").on("change", render)
 }
 
 function selectall() {
@@ -262,6 +264,8 @@ function cleanData(d,key) {
 function cleanDaily(incoming,key) {
 	columns = []
 	series = []
+	  dayshift = + ( $("input#dayshift").val() )
+	  dayshift = dayshift || 100
 
 	  d = d3.group(incoming, d => d.name)
 	  var first = true
@@ -284,12 +288,23 @@ function cleanDaily(incoming,key) {
 		dates: columns.map(d3.utcParse("%m/%d/%Y"))
 	}
 
+
+
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised per 100k)"
     data.series.forEach( d=> {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
    })
   }
+
+  if (d3.select("#normaliseTime").property("checked")) {
+    data.dates = data.dates.map((d,i) => i)
+    data.series.forEach( d=> {
+     d.values = d.values.filter(k => k > dayshift)
+   })
+  }
+
+
   return data
 }
 
@@ -298,19 +313,33 @@ function cleanGlobalAveraged(d,key,period) {
   //console.log("averaging")
   period = + ( $("input#deltaaverage").val() )
   period = period || 14
+
+  dayshift = + ( $("input#dayshift").val() )
+  dayshift = dayshift || 100
   //console.log(period)
   // turn the data into a what d3 expects for time series
   var columns = key === "deceased_US" ? d.columns.slice(12): d.columns.slice(4);
   columns = columns.map(c => c.replace("2020","20"))
  //console.log("cos",columns)
  //console.log("d",d)
-  var data = {
-    y: key.replace("_delta"," per day (new) averaged over " + period + " days") ,
-    series: d.map(e => ({
-      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
-      values: columns.map(k => +e.data[k])
-    })),
-   dates: columns.map(d3.utcParse("%m/%d/%Y"))
+ if (!d3.select("#normaliseTime").property("checked")) {
+	  var data = {
+	    y: key.replace("_delta"," per day (new) averaged over " + period + " days") ,
+	    series: d.map(e => ({
+	      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
+	      values: columns.map(k => +e.data[k])
+	    })),
+	   dates: columns.map(d3.utcParse("%m/%d/%Y"))
+	  }
+  } else {
+	  var data = {
+	    y: key.replace("_delta"," per day (new) averaged over " + period + " days") ,
+	    series: d.map(e => ({
+	      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
+	      values: columns.map(k => +e.data[k]).filter(k => k > dayshift)
+	    })),
+	      dates: columns.map((d,i) => i)
+	  }
   }
 
   if (key.includes("delta")) {
@@ -349,17 +378,30 @@ function cleanGlobalAveraged(d,key,period) {
 
 function cleanGlobal(d,key) {
   // turn the data into a what d3 expects for time series
+   dayshift = + ( $("input#dayshift").val() )
+  dayshift = dayshift || 100
   var columns = key === "deceased_US" ? d.columns.slice(12): d.columns.slice(4);
   columns = columns.map(c => c.replace("2020","20"))
  //console.log("cos",columns)
  //console.log("d",d)
-  var data = {
-    y: key.replace("_delta"," per day (new)") ,
-    series: d.map(e => ({
-      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
-      values: columns.map(k => +e.data[k])
-    })),
-   dates: columns.map(d3.utcParse("%m/%d/%Y"))
+ if (!d3.select("#normaliseTime").property("checked")) {
+	  var data = {
+	    y: key.replace("_delta"," per day (new)") ,
+	    series: d.map(e => ({
+	      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
+	      values: columns.map(k => +e.data[k])
+	    })),
+	   dates: columns.map(d3.utcParse("%m/%d/%Y"))
+  	}
+      } else {
+ 	  var data = {
+	    y: key.replace("_delta"," per day (new)") ,
+	    series: d.map(e => ({
+	      name: e.data["Combined_Key"] || e.data["Country/Region"] + " " + e.data["Province/State"],
+	      values: columns.map(k => +e.data[k]).filter(k => k > dayshift)
+	    })),
+	   dates: columns.map((d,i) => i)
+	  }
   }
 
   if (key.includes("delta")) {
@@ -393,6 +435,7 @@ function cleanGlobal(d,key) {
   return data
 }
 
+
 function vis(d,key) {
    // console.log(key)
    data =  cleanData(d,key)
@@ -409,7 +452,13 @@ function vis(d,key) {
   width = 800
   height = 500
   margin = ({top: 20, right: 50, bottom: 30, left: 20})
-  let x = d3.scaleUtc()
+
+  let x = d3.select("#normaliseTime").property("checked") ?
+  d3.scaleLinear()
+    .domain(d3.extent(data.dates))
+    .range([margin.left, width - margin.right])
+   :
+  d3.scaleUtc()
     .domain(d3.extent(data.dates))
     .range([margin.left, width - margin.right])
 
@@ -483,31 +532,51 @@ function vis(d,key) {
       })
       .attr("d", d => line(d.values))
 
-     svg.append("g")
-            .attr("id","dots")
-           .selectAll("circle")
-           .data(data.series, d => d.name)
-           .enter()
-           .append("circle")
-           .attr("r", 1.0)
-           .attr("cx",width - margin.right)
-           .attr("cy", (d,i) => y(d.values[d.values.length-1]))
-           .append("text")
+//     svg.append("g")
+//            .attr("id","dots")
+//           .selectAll("circle")
+//           .data(data.series, d => d.name)
+//           .enter()
+//           .append("circle")
+//           .attr("r", 1.0)
+//           .attr("cx",width - margin.right)
+//           .attr("cy", (d,i) => y(d.values[d.values.length-1]))
+//           .append("text")
 
-        svg.append("g")
-             .attr("id","names")
-             .selectAll("g")
-            .data(data.series, d => d.name)
-            .enter()
-           .append("text")
-           .attr("font-family", "sans-serif")
-           .attr("font-size", 10)
-           .attr("text-anchor", "end")
-           .attr("x",width - margin.right - 3)
-           .attr("y", (d,i) => y(d.values[d.values.length-1]))
-           .text((d) => {
-             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
-           } )
+
+	if (d3.select("#normaliseTime").property("checked")) {
+	        svg.append("g")
+	             .attr("id","names")
+	             .selectAll("g")
+	            .data(data.series, d => d.name)
+	            .enter()
+	           .append("text")
+	           .attr("font-family", "sans-serif")
+	           .attr("font-size", 10)
+	           .attr("text-anchor", "begin")
+	           .attr("x", (d,i) => x(d.values.length) )
+	           .attr("y", (d,i) => y(d.values[d.values.length-1]))
+	           .text((d) => {
+	             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
+	           } )
+	} else {
+	        svg.append("g")
+	             .attr("id","names")
+	             .selectAll("g")
+	            .data(data.series, d => d.name)
+	            .enter()
+	           .append("text")
+	           .attr("font-family", "sans-serif")
+	           .attr("font-size", 10)
+	           .attr("text-anchor", "end")
+	           .attr("x",width - margin.right - 3)
+	           .attr("y", (d,i) => y(d.values[d.values.length-1]))
+	           .text((d) => {
+	             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
+	           } )
+	}
+
+
 
   svg.call(hover, path, data, x, y, c);
 
