@@ -294,9 +294,9 @@ function cleanDaily(incoming,key) {
 
 
   if (d3.select("#normalise").property("checked")) {
-    data.y = data.y + " (normalised per 100k)"
+    data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
-     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 10000000)
    })
   }
 
@@ -354,9 +354,9 @@ function cleanGlobalAveraged(d,key,period) {
   }
 
   if (d3.select("#normalise").property("checked")) {
-    data.y = data.y + " (normalised per 100k)"
+    data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
-     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 10000000)
    })
   }
 
@@ -416,7 +416,7 @@ function cleanGlobal(d,key) {
   }
 
   if (d3.select("#normalise").property("checked")) {
-    data.y = data.y + " (normalised per 100k)"
+    data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
    })
