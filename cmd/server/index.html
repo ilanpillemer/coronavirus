@@ -18,7 +18,7 @@
 <body  onload="render()">
 
     <!-- Navbar goes here -->
-	  <nav class="blue">
+	  <nav class="blue nav-extended">
 	    <div class="nav-wrapper" class="block blue">
 	      <a href="#" class="brand-logo center">COVID-19 Visualisation</a>
 	      <ul id="nav-mobile" class="left hide-on-med-and-down">
@@ -32,9 +32,18 @@
 	        -->
 	      </ul>
 	    </div>
+	    <div class="nav-content">
+	      <ul class="tabs tabs-transparent">
+	        <li class="tab"><a class="active" href="#globalvis">Global Visualisation</a></li>
+	        <li class="tab"><a href="#test2">Coming Soon</a></li>
+	        <li class="tab"><a href="#test4">Support Resources</a></li>
+	      </ul>
+	    </div>
 	  </nav>
     <!-- Page Layout here -->
-    <div class="blue lighten-4"><div class="row" >
+    <div class="blue lighten-4" id="globalvis" >
+    <div class="row" >
+
 
       <div class="col s2">
         <!-- Grey navigation panel -->
@@ -152,8 +161,8 @@
 	<svg class="daily white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
 
       </div>
-    </div>
-
+ </div>
+<div id="test2" class="col s12">Test 2</div>
             <footer class="page-footer blue">
           <div class="container">
             <div class="row">
@@ -181,6 +190,7 @@
               </div>
             </div>
           </div>
+
           <div class="footer-copyright">
             <div class="container">
            The Website is strictly for educational and academic research purposes only.
