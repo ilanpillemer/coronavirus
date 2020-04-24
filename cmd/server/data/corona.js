@@ -61,12 +61,23 @@ async function render() {
 	  deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
 	//  deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
 	  recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
-	  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
 	  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
+	  d3.csv(deceased, data => {return {data}}).then(data => vis_col(data,"deceased_col"))
+
+	  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed"))
+	  d3.csv(confirmed, data => {return {data}}).then(data => vis_col(data,"confirmed_col"))
+
 	  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered"))
+	  d3.csv(recovered, data => {return {data}}).then(data => vis_col(data,"recovered_col"))
+
 	  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased_delta"))
+	  d3.csv(deceased, data => {return {data}}).then(data => vis_col(data,"deceased_delta_col"))
+
 	  d3.csv(confirmed, data => {return {data}}).then(data => vis(data,"confirmed_delta"))
+	  d3.csv(confirmed, data => {return {data}}).then(data => vis_col(data,"confirmed_delta_col"))
+
 	  d3.csv(recovered, data => {return {data}}).then(data => vis(data,"recovered_delta"))
+	  d3.csv(recovered, data => {return {data}}).then(data => vis_col(data,"recovered_delta_col"))
 
 	  // daily figures
 	   daily = "corona/daily.csv"  // temporary test csv for now
@@ -78,6 +89,17 @@ async function render() {
 		    active: d.Active
 		  };
 	     }).then(data => vis(data,"daily"))
+
+	  // daily figures
+	   daily = "corona/daily.csv"  // temporary test csv for now
+	    d3.csv(daily, d => {
+	       //console.log("testing",d)
+	       return {
+		    Day: d.Day,
+		    name: d.Country_Region + " " + d.Province_State,
+		    active: d.Active
+		  };
+	     }).then(data => vis_col(data,"daily_col"))
 
 	d3.select("#scale").on("change", render)
 	d3.select("#normalise").on("change", render)
@@ -255,7 +277,7 @@ function  reloadcolors() {
 
 
 function cleanData(d,key) {
-	if (key == "daily") {
+	if (key == "daily" || key == "daily_col" ) {
 		return cleanDaily(d,key)
 	}
 	if (key.includes("delta")) {
@@ -584,5 +606,171 @@ function vis(d,key) {
 
 
   svg.call(hover, path, data, x, y, c);
+
+}
+
+function vis_col(d,key) {
+
+   // console.log(key)
+   data =  cleanData(d,key)
+
+   //get all selected
+  const selectedCountries = $('select.countries').val()
+  data.series = data.series.filter(d => {
+    return  selectedCountries.includes(d.name)
+   })
+//d.values[d.values.length-1])
+data.series.sort(function(x, y){
+   return d3.descending( x.values[x.values.length-1], y.values[y.values.length-1]);
+})
+
+data.series = data.series.slice(0,25)
+
+  const c = d3.scaleOrdinal(d3.schemeCategory10).domain(selectedCountries)
+  const showSqrt = d3.select("#scale").property("checked")
+  const factor = showSqrt ? 4 : 4
+  const watermark = d3.max(data.series, d => d3.median(d.values)) / factor
+  width = 800
+  height = 500
+  margin = ({top: 20, right: 50, bottom: 30, left: 20})
+
+//  let x = d3.select("#normaliseTime").property("checked") ?
+//  d3.scaleLinear()
+//    .domain(d3.extent(data.dates))
+//    .range([margin.left, width - margin.right])
+//   :
+//  d3.scaleUtc()
+//    .domain(d3.extent(data.dates))
+//    .range([margin.left, width - margin.right])
+
+x = d3.scaleLinear()
+    .domain([0, d3.max(data.series, d => d.values[d.values.length-1])])
+    .range([margin.left, width - margin.right])
+
+//   let y = showSqrt ?
+//    d3.scaleLog().clamp(true)
+//    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
+//    .range([height - margin.bottom, margin.top])
+//   :
+//     d3.scaleLinear().clamp(true)
+//    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
+//    .range([height - margin.bottom, margin.top])
+
+
+let y = d3.scaleBand()
+    .domain(d3.range(data.series.length))
+    .rangeRound([margin.top, height - margin.bottom])
+    .padding(0.1)
+
+    xAxis = g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
+
+    let yformat = d3.format(",.0f")
+
+    yAxis = g => g
+    .attr("transform", `translate(${width-margin.right+2},0)`)
+    .call(d3.axisRight(y).ticks(5).tickFormat(d3.format(",.0f")))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.select(".tick:last-of-type text").clone()
+        .attr("x", -width/2)
+        .attr("text-anchor", "end")
+        .attr("font-weight", "bold")
+        .text(data.y))
+
+        line = d3.line()//.curve(d3.curveMonotoneX)
+    .defined( d => {
+     return !isNaN(d)
+     })
+    .x((d, i) => x(data.dates[i]))
+    .y(d => y(d))
+
+
+     svg = d3.select("svg." + key)
+     .attr("viewBox", [0, 0, width, height])
+     .style("overflow", "visible");
+
+   svg.select("g#bars").data(data.series).remove()
+   svg.select("g#names").data(data.series).remove()
+   svg.select("g#xaxis").data(data.series).remove()
+
+  svg.append("g")
+      .attr("id","xaxis")
+      .call(xAxis);
+
+//  svg.append("g")
+//      .attr("id","yaxis")
+//      .call(yAxis);
+
+
+const path  = svg.append("g")
+      .attr("id","bars")
+//      .attr("fill", "steelblue")
+    .selectAll("rect")
+    .data(data.series, d => d.name)
+    .join("rect")
+      .attr("x", x(0))
+      .attr("y", (d, i) => y(i))
+       .attr("fill", d =>  c(d.name))
+      .attr("stroke", "steelblue" )
+      .attr("width", d =>  {
+          //console.log(d3.max(d.values))
+      	return x(d.values[d.values.length-1])
+      })
+      .attr("height", y.bandwidth());
+
+svg.append("g")
+//      .attr("fill", "white")
+       .attr("id","names")
+      .attr("text-anchor", "begin")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 12)
+    .selectAll("text")
+    .data(data.series, d => d.name)
+    .join("text")
+      .attr("x", margin.left + 5)
+      .attr("y", (d, i) => y(i) + y.bandwidth() / 2)
+      .attr("dy", "0.35em")
+      .text(d => d.name);
+
+
+
+//	if (d3.select("#normaliseTime").property("checked")) {
+//	        svg.append("g")
+//	             .attr("id","names")
+//	             .selectAll("g")
+//	            .data(data.series, d => d.name)
+//	            .enter()
+//	           .append("text")
+//	           .attr("font-family", "sans-serif")
+//	           .attr("font-size", 10)
+//	           .attr("text-anchor", "begin")
+//	           .attr("x", (d,i) => x(d.values.length) )
+//	           .attr("y", (d,i) => y(d.values[d.values.length-1]))
+//	           .text((d) => {
+//	             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
+//	           } )
+//	} else {
+//	        svg.append("g")
+//	             .attr("id","names")
+//	             .selectAll("g")
+//	            .data(data.series, d => d.name)
+//	            .enter()
+//	           .append("text")
+//	           .attr("font-family", "sans-serif")
+//	           .attr("font-size", 10)
+//	           .attr("text-anchor", "end")
+//	           .attr("x",width - margin.right - 3)
+//	           .attr("y", (d,i) => y(d.values[d.values.length-1]))
+//	           .text((d) => {
+//	             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
+//	           } )
+//	}
+
+
+
+
+ // svg.call(hover, path, data, x, y, c);
+
 
 }

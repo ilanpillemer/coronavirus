@@ -109,7 +109,7 @@
       <div class="row">
 	      <div class="col">
 		        <div class="input-field">
-		          <input value="10" id="dayshift" type="text" class="validate">
+		          <input value="1" id="dayshift" type="text" class="validate">
 		          <label for="dayshift">Day 1 Count</label>
 		          <span class="helper-text" data-error="invalid value, please put a reasonable number" >Number of events to normalise as Day 1</span>
 		        </div>
@@ -153,14 +153,70 @@
 
       <div class="col s10" >
         <!-- graph page content  -->
- 	<svg class="deceased white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
-	<svg class="confirmed white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
-	<svg class="recovered white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
-	<svg class="deceased_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
-	<svg class="confirmed_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
-	<svg class="recovered_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+        <div class="row">
+ 	       <div class="col">
+	 	<svg class="deceased white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	       <div class="col">
+	 	<svg class="deceased_col white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
 
-	<svg class="daily white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+     <div class="row">
+ 	       <div class="col">
+	 	<svg class="deceased_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	       <div class="col">
+	 	<svg class="deceased_delta_col white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
+
+      <div class="row">
+ 	       <div class="col">
+	 	<svg class="confirmed white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	       <div class="col">
+	 	<svg class="confirmed_col white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
+
+      <div class="row">
+ 	       <div class="col">
+	 	<svg class="confirmed_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	       <div class="col">
+	 	<svg class="confirmed_delta_col white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
+
+     <div class="row">
+ 	       <div class="col">
+	 	<svg class="recovered white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	       <div class="col">
+	 	<svg class="recovered_col white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
+
+     <div class="row">
+ 	       <div class="col">
+	 	<svg class="recovered_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	       <div class="col">
+	 	<svg class="recovered_delta_col white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
+
+     <div class="row">
+ 	       <div class="col">
+	 	<svg class="daily white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	       <div class="col">
+	 	<svg class="daily_col white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
+
+
 
       </div>
  </div>
