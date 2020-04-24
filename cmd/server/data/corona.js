@@ -296,7 +296,7 @@ function cleanDaily(incoming,key) {
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
-     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 10000000)
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name) + 1) * 10000000)
    })
   }
 
@@ -356,7 +356,7 @@ function cleanGlobalAveraged(d,key,period) {
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
-     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 10000000)
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name) + 1) * 10000000)
    })
   }
 
@@ -418,7 +418,7 @@ function cleanGlobal(d,key) {
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
-     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 10000000)
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name) + 1) * 10000000)
    })
   }
 
@@ -493,7 +493,9 @@ function vis(d,key) {
         .text(data.y))
 
         line = d3.line()//.curve(d3.curveMonotoneX)
-    .defined( d => !isNaN(d) )
+    .defined( d => {
+     return !isNaN(d)
+     })
     .x((d, i) => x(data.dates[i]))
     .y(d => y(d))
 
