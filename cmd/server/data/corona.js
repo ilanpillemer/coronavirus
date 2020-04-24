@@ -418,7 +418,7 @@ function cleanGlobal(d,key) {
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
-     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 100000)
+     d.values = d.values.map( (e,i) => e / (+population.get(d.name)) * 10000000)
    })
   }
 
