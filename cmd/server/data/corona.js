@@ -41,6 +41,7 @@ async function setUp(data) {
 	      return defaultCountries.includes(extractKey(d))
 	    })
 	   .attr("value",d => extractKey(d))
+	   .attr("pop",d => +d.data.Population)
 	   .html(d => {
 		   population.set(extractKey(d), d.data.Population)
 		   iso2.set(extractKey(d), d.data.iso2)
@@ -108,7 +109,9 @@ async function render() {
 
 function selectall() {
   d3.selectAll("option.country")
-   .property("selected",true)
+   .property("selected", d => {
+     return +d.data.Population != 0
+     })
       M.AutoInit();
 }
 
