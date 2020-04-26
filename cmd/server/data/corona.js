@@ -26,12 +26,12 @@ function extractKey(d) {
 
 async function setUp(data) {
 	    // setup checkboxes
-	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]
+	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany ","Singapore ","Japan "]
 	   d3
 	  .select("select.countries")
 	  .selectAll("option.country")
 	  .data(data.filter(d=> {
-			  return d.data.Country_Region !== "US" || d.data.UID == "840"
+			  return (d.data.Country_Region !== "US" || d.data.UID == "840") && !defaultCountries.includes(extractKey(d))
 			  })
 		  , d => extractKey(d))
 	  .enter() //only runs once as data series doesnt change
@@ -47,6 +47,28 @@ async function setUp(data) {
 		   iso2.set(extractKey(d), d.data.iso2)
 		   return extractKey(d)
 		   })
+
+		  const lbl =  d3
+		  .select("div.countriesv2")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+			  return defaultCountries.includes(extractKey(d))
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .classed("col",true)
+		  .append("label")
+
+		  lbl.append("input")
+		    .classed("country",true)
+ 		    .attr("value",d => extractKey(d))
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    .property("checked",true)
+		   lbl.append("span")
+		  .html(d => extractKey(d))
+		  //.on("click", render)
 	   M.AutoInit();
 }
 
@@ -447,24 +469,10 @@ function cleanGlobal(d,key) {
 
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised by pop.)"
-    data.series.forEach( d=> {
+    data.series.each( d=> {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name) + 1) * 10000000)
    })
   }
-
-//  const lbl =  d3
-//  .select("div.countriesv2")
-//  .selectAll("label.country")
-//  .data(data.series)
-//  .enter() //only runs once as data series doesnt change
-//  .append("label")
-//
-//  lbl.append("input")
-//    .classed("country",true)
-//    .attr("type","checkbox")
-//    .classed("filled-in", true)
-//   lbl.append("span")
-//  .html(d => d.name)
   return data
 }
 
@@ -474,10 +482,19 @@ function vis(d,key) {
    data =  cleanData(d,key)
 
    //get all selected
-  const selectedCountries = $('select.countries').val()
+  const filteredCountries = $('select.countries').val()
+  const quickCountries = new Array()
+  $('.country:checkbox:checked').map((i,d) => quickCountries.push($(d).attr("value") ))
+  const selectedCountries = filteredCountries.concat(quickCountries)
+
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
+
+
+
+
+
   const c = d3.scaleOrdinal(d3.schemeCategory10).domain(selectedCountries)
   const showSqrt = d3.select("#scale").property("checked")
   const factor = showSqrt ? 4 : 4
@@ -623,7 +640,11 @@ function vis_col(d,key) {
    data =  cleanData(d,key)
 
    //get all selected
-  const selectedCountries = $('select.countries').val()
+   //get all selected
+  const filteredCountries = $('select.countries').val()
+  const quickCountries = new Array()
+  $('.country:checkbox:checked').map((i,d) => quickCountries.push($(d).attr("value") ))
+  const selectedCountries = filteredCountries.concat(quickCountries)
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
@@ -753,13 +774,9 @@ function vis_uk(d,key) {
 	    .rangeRound([margin.left, width - margin.right])
 	    .padding(0.08)
 
-
-
 	    y = d3.scaleLinear()
     .domain([0, y1Max])
     .range([height - margin.bottom, margin.top])
-
-
 
   //
   // set up layout
@@ -831,7 +848,7 @@ var age_series = stackEx(age_array);
       .attr("width", x.bandwidth())
       .attr("height", 0);
 
-	  function transitionStacked() {
+	  async function transitionStacked() {
 	    y.domain([0, y1Max]);
 
 	    rect.transition()
@@ -849,7 +866,7 @@ var age_series = stackEx(age_array);
 	        })
 	        .attr("width", x.bandwidth());
 	  }
-	  transitionStacked()
+
 
 	   yAxis = g => g
 	    .attr("transform", `translate(${width-margin.right+2},0)`)
@@ -865,6 +882,10 @@ var age_series = stackEx(age_array);
     .attr("transform", `translate(0,${height - margin.bottom})`)
     .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
 
+svg.append("g")
+  .attr("class", "legendOrdinal")
+  .attr("transform", "translate(20,20)")
+
   svg.append("g")
       .attr("id","yaxis")
       .call(yAxis)
@@ -873,9 +894,7 @@ var age_series = stackEx(age_array);
       .attr("id","xaxis")
       .call(xAxis);
 
-svg.append("g")
-  .attr("class", "legendOrdinal")
-  .attr("transform", "translate(20,20)")
+
 
   var legendOrdinal = d3.legendColor()
   //.orient("horizontal")
@@ -888,7 +907,10 @@ svg.append("g")
   .ascending(true)
   .scale(z);
 
-svg.select(".legendOrdinal")
-  .call(legendOrdinal);
+
+transitionStacked().then(svg.select(".legendOrdinal").call(legendOrdinal))
+//svg.select(".legendOrdinal")
+//  .call(legendOrdinal);
+
 
 }
