@@ -45,6 +45,7 @@ https://github.com/dsfsi/covid19za
 + "https://observablehq.com/@d3/multi-line-chart"
 + https://observablehq.com/@d3/stacked-to-grouped-bars
 + https://d3-legend.susielu.com
++ https://www.d3-graph-gallery.com/graph/custom_legend.html
 
 # technology used
 
