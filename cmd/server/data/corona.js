@@ -108,7 +108,7 @@ async function render() {
 
 	console.log("starting rendering tab2")
 	//hand tidyied csv for now...
-	age_uk = "age_uk.csv"
+	age_uk = "corona/age_uk.csv"
 	d3.csv(age_uk, data => {return {data}}).then(data => vis_uk(data,"age_uk"))
 }
 
