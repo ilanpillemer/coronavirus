@@ -63,11 +63,16 @@ async function setUp(data) {
 		  lbl.append("input")
 		    .classed("country",true)
  		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
 		    .classed("filled-in", true)
 		    .property("checked",true)
 		   lbl.append("span")
-		  .html(d => extractKey(d))
+		  .html(d => {
+		   population.set(extractKey(d), d.data.Population)
+		   iso2.set(extractKey(d), d.data.iso2)
+		   return extractKey(d)
+		   })
 		  //.on("click", render)
 	   M.AutoInit();
 }
