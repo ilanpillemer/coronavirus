@@ -31,7 +31,7 @@ async function setUp(data) {
 	  .select("select.countries")
 	  .selectAll("option.country")
 	  .data(data.filter(d=> {
-			  return (d.data.Country_Region !== "US" || d.data.UID == "840") //&& !defaultCountries.includes(extractKey(d))
+			  return (d.data.Country_Region !== "US" || d.data.UID == "840")  !defaultCountries.includes(extractKey(d))
 			  })
 		  , d => extractKey(d))
 	  .enter() //only runs once as data series doesnt change
