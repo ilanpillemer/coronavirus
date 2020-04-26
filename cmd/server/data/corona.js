@@ -67,13 +67,14 @@ async function setUp(data) {
 		    .attr("type","checkbox")
 		    .classed("filled-in", true)
 		    .property("checked",true)
+		     .on("click", render)
 		   lbl.append("span")
 		  .html(d => {
 		   population.set(extractKey(d), +(d.data.Population))
 		   iso2.set(extractKey(d), d.data.iso2)
 		   return extractKey(d)
 		   })
-		  //.on("click", render)
+
 	   M.AutoInit();
 }
 
@@ -87,6 +88,7 @@ function selectall() {
    .property("checked",true)
 
       M.AutoInit();
+      render()
 }
 
 function deselectall() {
@@ -97,6 +99,7 @@ function deselectall() {
    .property("checked",false)
 
       M.AutoInit();
+      render()
 }
 
 async function render() {
@@ -495,7 +498,6 @@ function cleanGlobal(d,key) {
 
 
 function vis(d,key) {
-   // console.log(key)
    data =  cleanData(d,key)
 
    //get all selected
