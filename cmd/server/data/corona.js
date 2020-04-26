@@ -57,11 +57,11 @@ async function render() {
 	//initalise for materialize see https://materializecss.com/select.html
 	M.AutoInit();
 	  console.log("starting rendering")
+	  console.log("starting rendering tab1")
 	  confirmed = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv"
-	//  confirmed_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv"
 	  deceased = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv"
-	//  deceased_US = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv"
 	  recovered = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_recovered_global.csv"
+
 	  d3.csv(deceased, data => {return {data}}).then(data => vis(data,"deceased"))
 	  d3.csv(deceased, data => {return {data}}).then(data => vis_col(data,"deceased_col"))
 
@@ -105,6 +105,11 @@ async function render() {
 	d3.select("#scale").on("change", render)
 	d3.select("#normalise").on("change", render)
 	d3.select("#normaliseTime").on("change", render)
+
+	console.log("starting rendering tab2")
+	//hand tidyied csv for now...
+	age_uk = "age_uk.csv"
+	d3.csv(age_uk, data => {return {data}}).then(data => vis_uk(data,"age_uk"))
 }
 
 function selectall() {
@@ -637,28 +642,9 @@ data.series = data.series.slice(0,25)
   height = 500
   margin = ({top: 20, right: 50, bottom: 30, left: 20})
 
-//  let x = d3.select("#normaliseTime").property("checked") ?
-//  d3.scaleLinear()
-//    .domain(d3.extent(data.dates))
-//    .range([margin.left, width - margin.right])
-//   :
-//  d3.scaleUtc()
-//    .domain(d3.extent(data.dates))
-//    .range([margin.left, width - margin.right])
-
 x = d3.scaleLinear()
     .domain([0, d3.max(data.series, d => d.values[d.values.length-1])])
     .range([margin.left, width - margin.right])
-
-//   let y = showSqrt ?
-//    d3.scaleLog().clamp(true)
-//    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
-//    .range([height - margin.bottom, margin.top])
-//   :
-//     d3.scaleLinear().clamp(true)
-//    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
-//    .range([height - margin.bottom, margin.top])
-
 
 let y = d3.scaleBand()
     .domain(d3.range(data.series.length))
@@ -701,14 +687,8 @@ let y = d3.scaleBand()
       .attr("id","xaxis")
       .call(xAxis);
 
-//  svg.append("g")
-//      .attr("id","yaxis")
-//      .call(yAxis);
-
-
 const path  = svg.append("g")
       .attr("id","bars")
-//      .attr("fill", "steelblue")
     .selectAll("rect")
     .data(data.series, d => d.name)
     .join("rect")
@@ -736,44 +716,179 @@ svg.append("g")
       .attr("dy", "0.35em")
       .text(d => d.name);
 
-
-
-//	if (d3.select("#normaliseTime").property("checked")) {
-//	        svg.append("g")
-//	             .attr("id","names")
-//	             .selectAll("g")
-//	            .data(data.series, d => d.name)
-//	            .enter()
-//	           .append("text")
-//	           .attr("font-family", "sans-serif")
-//	           .attr("font-size", 10)
-//	           .attr("text-anchor", "begin")
-//	           .attr("x", (d,i) => x(d.values.length) )
-//	           .attr("y", (d,i) => y(d.values[d.values.length-1]))
-//	           .text((d) => {
-//	             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
-//	           } )
-//	} else {
-//	        svg.append("g")
-//	             .attr("id","names")
-//	             .selectAll("g")
-//	            .data(data.series, d => d.name)
-//	            .enter()
-//	           .append("text")
-//	           .attr("font-family", "sans-serif")
-//	           .attr("font-size", 10)
-//	           .attr("text-anchor", "end")
-//	           .attr("x",width - margin.right - 3)
-//	           .attr("y", (d,i) => y(d.values[d.values.length-1]))
-//	           .text((d) => {
-//	             return +(d.values[d.values.length-1]) > watermark ? d.name : ""
-//	           } )
-//	}
-
-
-
-
  // svg.call(hover, path, data, x, y, c);
+}
 
+function vis_uk(d,key) {
+
+  // set up controls/geometries for chart
+  width = 800
+  height = 500
+
+  margin = ({top: 20, right: 50, bottom: 30, left: 20})
+//	console.log(key,d)
+
+	       const svg = d3.select("svg." + key)
+	      .attr("viewBox", [0, 0, width, height]);
+//	console.log(svg)
+  // end of set up
+
+  // x and y scales
+  //xz is the shared x values
+  //hard coded various variables during first phase
+//  xz = ["Age group",	"Up to 01-Mar-20",	"01-Mar-20",	"02-Mar-20",	"03-Mar-20",	"04-Mar-20",	"05-Mar-20",	"06-Mar-20",	"07-Mar-20",	"08-Mar-20",	"09-Mar-20",	"10-Mar-20",	"11-Mar-20",	"12-Mar-20",	"13-Mar-20",	"14-Mar-20",	"15-Mar-20",	"16-Mar-20",	"17-Mar-20",	"18-Mar-20",	"19-Mar-20",	"20-Mar-20",	"21-Mar-20",	"22-Mar-20",	"23-Mar-20",	"24-Mar-20",	"25-Mar-20",	"26-Mar-20",	"27-Mar-20",	"28-Mar-20",	"29-Mar-20",	"30-Mar-20",	"31-Mar-20",	"01-Apr-20",	"02-Apr-20",	"03-Apr-20",	"04-Apr-20",	"05-Apr-20",	"06-Apr-20",	"07-Apr-20",	"08-Apr-20",	"09-Apr-20",	"10-Apr-20",	"11-Apr-20",	"12-Apr-20",	"13-Apr-20",	"14-Apr-20",	"15-Apr-20",	"16-Apr-20",	"17-Apr-20",	"18-Apr-20",	"19-Apr-20",	"20-Apr-20",	"21-Apr-20",	"22-Apr-20",	"23-Apr-20",	"24-Apr-20"]
+
+  xz = ["01-Mar-20",	"02-Mar-20",	"03-Mar-20",	"04-Mar-20",	"05-Mar-20",	"06-Mar-20",	"07-Mar-20",	"08-Mar-20",	"09-Mar-20",	"10-Mar-20",	"11-Mar-20",	"12-Mar-20",	"13-Mar-20",	"14-Mar-20",	"15-Mar-20",	"16-Mar-20",	"17-Mar-20",	"18-Mar-20",	"19-Mar-20",	"20-Mar-20",	"21-Mar-20",	"22-Mar-20",	"23-Mar-20",	"24-Mar-20",	"25-Mar-20",	"26-Mar-20",	"27-Mar-20",	"28-Mar-20",	"29-Mar-20",	"30-Mar-20",	"31-Mar-20",	"01-Apr-20",	"02-Apr-20",	"03-Apr-20",	"04-Apr-20",	"05-Apr-20",	"06-Apr-20",	"07-Apr-20",	"08-Apr-20",	"09-Apr-20",	"10-Apr-20",	"11-Apr-20",	"12-Apr-20",	"13-Apr-20",	"14-Apr-20",	"15-Apr-20",	"16-Apr-20",	"17-Apr-20",	"18-Apr-20",	"19-Apr-20",	"20-Apr-20",	"21-Apr-20",	"22-Apr-20",	"23-Apr-20",	"24-Apr-20"]
+
+//xz = [new Date(2015, 0, 1),new Date(2015, 1, 1),new Date(2015, 2, 1),new Date(2015,3, 1)]
+  n = 5 // number of series
+ y1Max = 900
+  z = d3.scaleSequential(d3.interpolateBlues)
+    .domain([-0.5 * n, 1.5 * n])
+
+    z = d3.scaleOrdinal(d3.schemeCategory10);
+
+	x = d3.scaleBand()
+	    .domain(xz.map( (d,i) => i))
+	    .rangeRound([margin.left, width - margin.right])
+	    .padding(0.08)
+
+
+
+	    y = d3.scaleLinear()
+    .domain([0, y1Max])
+    .range([height - margin.bottom, margin.top])
+
+
+
+  //
+  // set up layout
+  // need something that looks like this....
+//  var data = [
+//  {month: new Date(2015, 0, 1), apples: 3840, bananas: 1920, cherries: 960, dates: 400},
+//  {month: new Date(2015, 1, 1), apples: 1600, bananas: 1440, cherries: 960, dates: 400},
+//  {month: new Date(2015, 2, 1), apples:  640, bananas:  960, cherries: 640, dates: 400},
+//  {month: new Date(2015, 3, 1), apples:  320, bananas:  480, cherries: 640, dates: 400}
+//]; ie
+  var data = [
+  {month: new Date(2015, 0, 1), "0 - 19 yrs": 3840, "20 - 39": 1920, "40 - 59": 960, "60 - 79": 400, "80+": 400 },
+  {month: new Date(2015, 1, 1), "0 - 19 yrs": 1600, "20 - 39": 1440, "40 - 59": 960, "60 - 79": 400,"80+": 400 },
+  {month: new Date(2015, 2, 1), "0 - 19 yrs":  640, "20 - 39":  960, "40 - 59": 640, "60 - 79": 400,"80+": 400 },
+  {month: new Date(2015, 3, 1), "0 - 19 yrs":  320, "20 - 39":  480, "40 - 59": 640, "60 - 79": 400,"80+": 400 }
+];
+
+var stackEx = d3.stack()
+    .keys(["0 - 19 yrs", "20 - 39", "40 - 59", "60 - 79", "80+"])
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone);
+var series = stackEx(data);
+
+
+
+  //console.log(d)
+  age_array = new Array()
+  temp = new Map()
+  d.forEach ( e => {
+  	agroup = e.data["Age group"]
+  	entries = d3.entries(e.data)
+  	//console.log(entries)
+  	//console.log(agroup)
+  	entries.forEach ( f => {
+	  	   if (agroup !== "Total" && f.key !== "Age group" && f.key !== "Up to 01-Mar-20" && f.key !== "") {
+	  	  //console.log(f)
+	  	  item = temp.get(f.key) || {}
+	  	  item["month"]=f.key // ugly hacking so much
+	  	  //console.log(agroup)
+	  	  //console.log(item)
+	  	  item[agroup] = f.value
+		  //console.log(item)
+	  	  temp.set(f.key, item)
+  	  }
+  	})
+ 	//console.log(temp)
+  	//console.log(e)
+  })
+
+ // console.log(temp)
+  temp.forEach ( d => {
+    //console.log(d)
+    age_array.push(d)
+  })
+
+  //console.log(age_series)
+var age_series = stackEx(age_array);
+
+  // draw bars
+  const rect = svg.selectAll("g")
+    .data(age_series)
+    .join("g")
+      .attr("fill", (d, i) => z(i))
+    .selectAll("rect")
+    .data(d => d)
+    .join("rect")
+      .attr("x", (d, i) => x(i))
+      .attr("y", height - margin.bottom)
+      .attr("width", x.bandwidth())
+      .attr("height", 0);
+
+	  function transitionStacked() {
+	    y.domain([0, y1Max]);
+
+	    rect.transition()
+	        .duration(500)
+	        .delay((d, i) => i * 20)
+	        .attr("y", d => y(d[1]))
+	        .attr("height", d => y(d[0]) - y(d[1]))
+	      .transition()
+	        .attr("x", (d, i) => {
+//	        	        console.log("d",d)
+//	        	        console.log("i",i)
+//	        	        console.log("x",x(d.month))
+
+		        return x(i)
+	        })
+	        .attr("width", x.bandwidth());
+	  }
+	  transitionStacked()
+
+	   yAxis = g => g
+	    .attr("transform", `translate(${width-margin.right+2},0)`)
+	    .call(d3.axisRight(y).ticks(5).tickFormat(d3.format(",.0f")))
+	    .call(g => g.select(".domain").remove())
+	    .call(g => g.select(".tick:last-of-type text").clone()
+	        .attr("x", -width/2)
+	        .attr("text-anchor", "end")
+	        .attr("font-weight", "bold")
+	        .text("Deceased: March 1 to April 24th 2020"))
+
+    xAxis = g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
+
+  svg.append("g")
+      .attr("id","yaxis")
+      .call(yAxis)
+
+  svg.append("g")
+      .attr("id","xaxis")
+      .call(xAxis);
+
+svg.append("g")
+  .attr("class", "legendOrdinal")
+  .attr("transform", "translate(20,20)")
+
+  var legendOrdinal = d3.legendColor()
+  //.orient("horizontal")
+  .labels(["0 - 19 yrs","20 - 39","40 - 59","60 - 79","80+"])
+  .cellFilter(function(d){ return d.label !== "e" })
+  .shape("circle")
+  .shapePadding(25)
+  .labelAlign("end")
+  .labelOffset(20)
+  .ascending(true)
+  .scale(z);
+
+svg.select(".legendOrdinal")
+  .call(legendOrdinal);
 
 }

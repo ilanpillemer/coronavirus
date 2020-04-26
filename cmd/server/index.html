@@ -12,6 +12,8 @@
 	<script src="https://d3js.org/d3-array.v2.min.js"></script>
 	<!-- jquery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<!-- d3-legend -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 	<!-- me -->
 	<script src="corona.js"></script>
 	<!--Let browser know website is optimized for mobile-->
@@ -22,7 +24,7 @@
     <!-- Navbar goes here -->
 	  <nav class="blue nav-extended">
 	    <div class="nav-wrapper" class="block blue">
-	      <a href="#" class="brand-logo center">COVID-19 Information and Support Resources</a>
+	      <a href="#" class="brand-logo center">COVID-19 </a>
 	      <ul id="nav-mobile" class="left hide-on-med-and-down">
 
 	        <li><a class="waves-effect waves-light btn-small"
@@ -37,8 +39,9 @@
 	    <div class="nav-content">
 	      <ul class="tabs tabs-transparent">
 	        <li class="tab"><a class="active" href="#globalvis">Global Visualisation</a></li>
+	        <li class="tab"><a href="#ukanalysis">Analysis Visualisation</a></li>
 	        <li class="tab"><a href="#sources">Data Sources</a></li>
-	        <li class="tab"><a href="#surveys">Surveys to Support</a></li>
+	       <li class="tab"><a href="#surveys">Surveys to Support</a></li>
 	      </ul>
 	    </div>
 	  </nav>
@@ -221,10 +224,36 @@
       </div>
  </div>
 </div>
-<div id="test2" class="col s12"></div>
 
 
 
+<!--- ukanalysis tab -->
+<div id="ukanalysis" class="blue lighten-4">
+   <div class="row">
+        <!-- Grey navigation panel -->
+      <div class="col s2">
+
+      </div>
+        <!-- End of Grey navigation panel -->
+        <!-- graph page content  -->
+      <div class="col s10" >
+        <div class="row">
+ 	       <div class="col s3">
+	 	<p>These charts breakdown the deaths in UK from the statistics provided by NHS England. Consult the sources for more details about the data and terms of use.</p>
+	 	<p> The charts shown on this tab are not yet being updated automatically. The current data represents the data that was published and available on the 25th April 2020.<p>
+	 	<p> This section contains information on deaths of patients who have died in hospitals in England and had tested positive for COVID-19 at time of death. All deaths are recorded against the date of death rather than the date the deaths were announced. Interpretation of the figures should take into account the fact that totals by date of death, particularly for most recent days, are likely to be updated in future releases. For example as deaths are confirmed as testing positive for COVID-19, as more post-mortem tests are processed and data from them are validated. Any changes are made clear in the daily files. </p>
+	 	</br>
+	 	<p> These figures do not include deaths outside hospital, such as those in care homes. This approach makes it possible to compile deaths data on a daily basis using up to date figures. <p>
+	       </div>
+ 	       <div class="col s5">
+	 	<svg class="age_uk white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+	       </div>
+ 	</div>
+       </div>
+        <!-- End of graph page content  -->
+  </div>
+</div>
+<!-- end ukanalysis tab>
 
 
 <!--- survey etc tab -->
@@ -252,7 +281,7 @@
           <span class="card-title">hourtime</span>
           <p>Not simply help, time together.</p></br>
           <p>Hourtime are a team doing market research in order to deliver ways to help volunteers co-ordinate better.
-We need your help to run a market research for our idea before moving forward.
+They need your help to run a market research for our idea before moving forward.
 It will take no more than 2 minutes.</p>
         </div>
         <div class="card-action">
@@ -263,7 +292,7 @@ It will take no more than 2 minutes.</p>
 <!-- end card 2-->
   </div>
 </div>
-
+<!-- end survey tab>
 <!--- source etc tab -->
 <div id="sources" class="blue lighten-4">
    <div class="row">
@@ -429,6 +458,8 @@ Every piece of data includes GeoJSON and population data, cites the source from 
                 <h5 class="white-text">Sources</h5>
                 <ul>
                   <li><a class="grey-text text-lighten-3" href="https://github.com/CSSEGISandData/COVID-19">John Hopkins CSSE</a></li>
+	         <li><a class="grey-text text-lighten-3" href="https://www.england.nhs.uk/statistics/statistical-work-areas/covid-19-daily-deaths/">NHS England</a></li>
+
                   <!--
                   <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
                   <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>

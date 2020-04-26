@@ -26,6 +26,11 @@ Also, Supported by ESRI Living Atlas Team and the Johns Hopkins University Appli
 
 Please see John Hopkins [Terms of Use](https://github.com/CSSEGISandData/COVID-19/blob/master/README.md) to understand the limitations and warranties of the data.
 
+
+## NHS England
+
++ https://www.england.nhs.uk/statistics/statistical-work-areas/covid-19-daily-deaths/
+
 ## Coronavirus COVID-19 (2019-nCoV) Data Repository for South Africa
 
 https://github.com/dsfsi/covid19za
@@ -38,6 +43,8 @@ https://github.com/dsfsi/covid19za
 + https://github.com/d3/d3/wiki/Tutorials
 + https://bl.ocks.org
 + "https://observablehq.com/@d3/multi-line-chart"
++ https://observablehq.com/@d3/stacked-to-grouped-bars
++ https://d3-legend.susielu.com
 
 # technology used
 
