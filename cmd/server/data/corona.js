@@ -77,6 +77,28 @@ async function setUp(data) {
 	   M.AutoInit();
 }
 
+function selectall() {
+  d3.selectAll("option.country")
+   .property("selected", d => {
+     return +d.data.Population != 0
+     })
+
+  d3.selectAll("input.country")
+   .property("checked",true)
+
+      M.AutoInit();
+}
+
+function deselectall() {
+  d3.selectAll("option.country")
+   .property("selected",false)
+
+  d3.selectAll("input.country")
+   .property("checked",false)
+
+      M.AutoInit();
+}
+
 async function render() {
 	if (!hasInit) {
 		await init()
@@ -139,20 +161,7 @@ async function render() {
 	d3.csv(age_uk, data => {return {data}}).then(data => vis_uk(data,"age_uk"))
 }
 
-function selectall() {
-  d3.selectAll("option.country")
-   .property("selected", d => {
-     return +d.data.Population != 0
-     })
-      M.AutoInit();
-}
 
-function deselectall() {
-  //console.log("hello")
-  d3.selectAll("option.country")
-   .property("selected",false)
-      M.AutoInit();
-}
 
 function hover(svg, path, data, x, y, c) {
 
@@ -560,11 +569,11 @@ function vis(d,key) {
      .attr("viewBox", [0, 0, width, height])
      .style("overflow", "visible");
 
-   svg.select("g#paths").data(data.series).remove()
-   svg.select("g#names").data(data.series).remove()
-   svg.select("g#dots").data(data.series).remove()
-   svg.select("g#yaxis").data(data.series).remove()
-   svg.select("g#xaxis").data(data.series).remove()
+   svg.select("g#paths").remove()
+   svg.select("g#names").remove()
+   svg.select("g#dots").remove()
+   svg.select("g#yaxis").remove()
+   svg.select("g#xaxis").remove()
 
   svg.append("g")
       .attr("id","xaxis")
@@ -710,9 +719,9 @@ let y = d3.scaleBand()
      .attr("viewBox", [0, 0, width, height])
      .style("overflow", "visible");
 
-   svg.select("g#bars").data(data.series).remove()
-   svg.select("g#names").data(data.series).remove()
-   svg.select("g#xaxis").data(data.series).remove()
+   svg.select("g#bars").remove()
+   svg.select("g#names").remove()
+   svg.select("g#xaxis").remove()
 
   svg.append("g")
       .attr("id","xaxis")
