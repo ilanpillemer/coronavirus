@@ -26,7 +26,7 @@ function extractKey(d) {
 
 async function setUp(data) {
 	    // setup checkboxes
-	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]//),"Singapore ","Japan "]
+	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany ","Singapore ","Japan "]
 	   d3
 	  .select("select.countries")
 	  .selectAll("option.country")
@@ -355,9 +355,7 @@ function cleanDaily(incoming,key) {
     data.series.forEach( d=> {
      //console.log(d)
      d.values = d.values.map( (e,i) => {
-     	    console.log("e",e)
-     	     //console.log("pop",(+population.get(d.name) + 1))
-	    return  (e+1) / (+population.get(d.name) + 1) * 10000000
+	    return  e / (+population.get(d.name) + 1) * 10000000
      })
    })
   }
