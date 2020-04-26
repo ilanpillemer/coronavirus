@@ -26,12 +26,12 @@ function extractKey(d) {
 
 async function setUp(data) {
 	    // setup checkboxes
-	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany ","Singapore ","Japan "]
+	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany "]//),"Singapore ","Japan "]
 	   d3
 	  .select("select.countries")
 	  .selectAll("option.country")
 	  .data(data.filter(d=> {
-			  return (d.data.Country_Region !== "US" || d.data.UID == "840") && !defaultCountries.includes(extractKey(d))
+			  return (d.data.Country_Region !== "US" || d.data.UID == "840") //&& !defaultCountries.includes(extractKey(d))
 			  })
 		  , d => extractKey(d))
 	  .enter() //only runs once as data series doesnt change
@@ -69,7 +69,7 @@ async function setUp(data) {
 		    .property("checked",true)
 		   lbl.append("span")
 		  .html(d => {
-		   population.set(extractKey(d), d.data.Population)
+		   population.set(extractKey(d), +(d.data.Population))
 		   iso2.set(extractKey(d), d.data.iso2)
 		   return extractKey(d)
 		   })
@@ -353,7 +353,12 @@ function cleanDaily(incoming,key) {
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised by pop.)"
     data.series.forEach( d=> {
-     d.values = d.values.map( (e,i) => e / (+population.get(d.name) + 1) * 10000000)
+     //console.log(d)
+     d.values = d.values.map( (e,i) => {
+     	    console.log("e",e)
+     	     //console.log("pop",(+population.get(d.name) + 1))
+	    return  (e+1) / (+population.get(d.name) + 1) * 10000000
+     })
    })
   }
 
@@ -474,7 +479,7 @@ function cleanGlobal(d,key) {
 
   if (d3.select("#normalise").property("checked")) {
     data.y = data.y + " (normalised by pop.)"
-    data.series.each( d=> {
+    data.series.forEach( d=> {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name) + 1) * 10000000)
    })
   }
@@ -490,7 +495,8 @@ function vis(d,key) {
   const filteredCountries = $('select.countries').val()
   const quickCountries = new Array()
   $('.country:checkbox:checked').map((i,d) => quickCountries.push($(d).attr("value") ))
-  const selectedCountries = filteredCountries.concat(quickCountries)
+  selectedCountries = new Array()
+   selectedCountries = filteredCountries.concat(quickCountries)
 
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
@@ -649,7 +655,8 @@ function vis_col(d,key) {
   const filteredCountries = $('select.countries').val()
   const quickCountries = new Array()
   $('.country:checkbox:checked').map((i,d) => quickCountries.push($(d).attr("value") ))
-  const selectedCountries = filteredCountries.concat(quickCountries)
+   selectedCountries = new Array()
+  selectedCountries = filteredCountries.concat(quickCountries)
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
