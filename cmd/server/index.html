@@ -4,14 +4,15 @@
 <head>
 	<!--Import Google Icon Font-->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<!--materialize-->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	<!-- d3 -->
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="https://d3js.org/d3-array.v2.min.js"></script>
-	<!-- jquery -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
 	<!-- d3-legend -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 	<!-- me -->
@@ -19,6 +20,7 @@
 	<!--Let browser know website is optimized for mobile-->
 	<!--<meta name="viewport" content="width=device-width, initial-scale=1.0"/>-->
 </head>
+
 <body  class="blue" onload="render()">
 
     <!-- Navbar goes here -->
@@ -41,7 +43,7 @@
 	        <li class="tab"><a class="active" href="#globalvis">Global Visualisation</a></li>
 	        <li class="tab"><a href="#ukanalysis">Analysis Visualisation</a></li>
 	        <li class="tab"><a href="#sources">Data Sources</a></li>
-	       <li class="tab"><a href="#surveys">Surveys to Support</a></li>
+	       <!--<li class="tab"><a href="#surveys">Surveys to Support</a></li>-->
 	       <li class="tab"><a href="#issues">Issues and Requests</a></li>
 	      </ul>
 	    </div>
@@ -91,16 +93,95 @@
 			  </div>
 		</div>
 	  </div>
-	  <div class="row">
-		  <div class="col">
-			  <div class="input-field ">
-			    <select multiple class="countries" >
-			      <option value="" disabled selected>Select Countries</option>
-			    </select>
-			    <label>Filter Countries</label>
-			  </div>
-	           </div>
-	</div>
+
+             <div class="row">
+             <div class="col">
+	             <div class="left">
+			   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="selectall()">select all
+			  </button>
+	            </div>
+            </div>
+            <div class="col">
+     	        <div class="left">
+			   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="deselectall()">deselect all
+			  </button>
+	       </div>
+            </div>
+            </div>
+
+	<div class="row">
+		  <label>Select Countries</label>
+			<ul class="collapsible">
+			  <li class="active">
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      Popular
+			      </div>
+			    <div class="collapsible-body">
+				 <span><div class="popular"></div></span>
+			    </div>
+			  </li>
+			  <li >
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      Europe
+			      </div>
+			    <div class="collapsible-body">
+				 <span><div class="europe"></div></span>
+			    </div>
+			  </li>
+			  <li>
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      Africa
+			      </div>
+			    <div class="collapsible-body">
+				 <span><div class="africa"></div></span>
+			    </div>
+			  </li>
+			  <li>
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      Oceania
+			      <!-- <span class="badge">1</span>-->
+			     </div>
+			    <div class="collapsible-body"><p><div class="oceania"></div></p></div>
+			  </li>
+			  <li>
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      Asia
+			      <!-- <span class="badge">1</span>-->
+			     </div>
+			    <div class="collapsible-body"><p><div class="asia"></div></p></div>
+			  </li>
+			  <li>
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      North America
+			      <!-- <span class="badge">1</span>-->
+			     </div>
+			    <div class="collapsible-body"><p><div class="northamerica"></div></p></div>
+			  </li>
+			  <li>
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      South America
+			      <!-- <span class="badge">1</span>-->
+			     </div>
+			    <div class="collapsible-body"><p><div class="southamerica"></div></p></div>
+			  </li>
+			  <li>
+			    <div class="collapsible-header">
+			      <i class="material-icons">place</i>
+			      Other
+			      <!-- <span class="badge">1</span>-->
+			     </div>
+			    <div class="collapsible-body"><p><div class="other"></div></p></div>
+			  </li>
+			</ul>
+
+	</div> <!-- end of row -->
       <div class="row">
 	      <div class="col">
 		        <div class="input-field">
@@ -123,35 +204,13 @@
            <div class="row">
    	        <div class="col">
 	 	          <div class="left">
-				   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="render()" id="filterButton">Apply Filter
+				   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="render()" id="filterButton">Apply Changes
 				    <i class="material-icons right">send</i>
 				  </button>
 		            </div>
 		    </div>
 	    </div>
-             <div class="row">
-             <div class="col">
-	             <div class="left">
-			   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="selectall()">select all
-			  </button>
-	            </div>
-            </div>
-            <div class="col">
-     	        <div class="left">
-			   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="deselectall()">deselect all
-			  </button>
-	       </div>
-            </div>
-            </div>
-           <div class="row">
-	           <div class="col">
-	           <label>Quick Select Countries</label>
-	           </div>
-           </div>
-           <div class="row">
-  	         <div class="countriesv2">
-	          </div>
-           </div>
+
       </div>
 
       <div class="col s10" >
@@ -255,44 +314,6 @@
 </div>
 <!-- end ukanalysis tab>
 
-
-<!--- survey etc tab -->
-<div id="surveys" class="blue lighten-4">
-   <div class="row">
-     <!--card 1-->
-    <div class="col s3 m3">
-      <div class="card small blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title">WeBike Survey</span>
-          <p>WeBike are developing the WeBike app to make sure we minimize our own exposure to COVID-19 while cycling and help avoid a second wave of virus spread. WeBike allows all of us to anonymously contribute our cycling behavior to help cities better understand how our commuting has been affected by the COVID-19 and identify the actions we can take to stay safe. WeBike allows all of us to anonymously contribute our cycling behavior to help cities better understand how our commuting has been affected by the COVID-19 and identify the actions we can take to stay safe.</p>
-        </div>
-        <div class="card-action">
-          <a href="https://forms.gle/C4SmoAfn2VYeqguJA">Denmark</a>
-          <a href="https://forms.gle/oLKRxc2djKKh8KSP7">Europe Only</a>
-           <a href="https://www.google.com/url?q=http://www.urbanphysics.net/Social%2520Distancing%2520v20_White_Paper.pdf&sa=D&ust=1587807401492000&usg=AFQjCNEtwphNpGgizs14uDHiyxQq90mE5A">White Paper</a>
-        </div>
-      </div>
-    </div>
-    <!--end card 1-->
-    <!-- card 2-->
-  <div class="col s3">
-      <div class="card small blue-grey darken-1">
-        <div class="card-content white-text">
-          <span class="card-title">hourtime</span>
-          <p>Not simply help, time together.</p></br>
-          <p>Hourtime are a team doing market research in order to deliver ways to help volunteers co-ordinate better.
-They need your help to run a market research for our idea before moving forward.
-It will take no more than 2 minutes.</p>
-        </div>
-        <div class="card-action">
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdG6_9jAA3zAVTub_fUVLYJJg9AJPtUzfzma2YZDnvebciMaw/viewform?usp=sf_link">Survey</a>
-        </div>
-      </div>
-</div>
-<!-- end card 2-->
-  </div>
-</div>
-<!-- end survey tab>
 <!--- source etc tab -->
 <div id="sources" class="blue lighten-4">
    <div class="row">

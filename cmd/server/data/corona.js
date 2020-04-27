@@ -3,6 +3,7 @@
 var hasInit = false
 var population = new Map()
 var iso2 = new Map()
+var continentMap = new Map()
 
 
 async function init() {
@@ -14,10 +15,24 @@ async function init() {
 		    return target.replace(new RegExp(search, 'g'), replacement);
 		};
 	}
-	// lookup data
+	// continent to country code
+	continent = "corona/country-and-continent.csv"
 	lookup = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/UID_ISO_FIPS_LookUp_Table.csv"
+
+	await d3.csv(continent, d => {
+	  continentMap.set(d.iso2,d.Continent_Name)
+	})
+	await d3.csv(lookup,  d => {
+	    iso2.set(extractKey2(d), d.iso2)
+	})
+
+	// set up controls
 	setUp(await d3.csv(lookup, data => {return {data}}))
 	hasInit = true
+}
+
+function extractKey2(d) {
+	return d.Country_Region + " " + d.Province_State
 }
 
 function extractKey(d) {
@@ -26,66 +41,244 @@ function extractKey(d) {
 
 async function setUp(data) {
 	    // setup checkboxes
+	   // console.log(continentMap)
 	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany ","Singapore ","Japan "]
-	   d3
-	  .select("select.countries")
-	  .selectAll("option.country")
-	  .data(data.filter(d=> {
-			  return (d.data.Country_Region !== "US" || d.data.UID == "840") && !defaultCountries.includes(extractKey(d))
-			  })
-		  , d => extractKey(d))
-	  .enter() //only runs once as data series doesnt change
-	  .append("option")
-	  .classed("country",true)
-	  .property("selected",d => {
-	      return defaultCountries.includes(extractKey(d))
-	    })
-	   .attr("value",d => extractKey(d))
-	   .attr("pop",d => +d.data.Population)
-	   .html(d => {
-		   population.set(extractKey(d), d.data.Population)
-		   iso2.set(extractKey(d), d.data.iso2)
-		   return extractKey(d)
-		   })
 
-		  const lbl =  d3
-		  .select("div.countriesv2")
+		 //Africa
+		  const lblAfrica =  d3
+		  .select("div.africa")
 		  .selectAll("label.country")
 		  .data(data.filter(d=> {
-			  return defaultCountries.includes(extractKey(d))
+		            continent = continentMap.get(iso2.get(extractKey(d)))
+		            console.log(continent)
+			  return continent == "Africa" && !defaultCountries.includes(extractKey(d))
 			  })
 		  , d => extractKey(d))
 		  .enter() //only runs once as data series doesnt change
 		  .append("div")
-		  .classed("col",true)
 		  .append("label")
 
-		  lbl.append("input")
-		    .classed("country",true)
+		  lblAfrica.append("input")
+		    .classed("country blue",true)
+ 		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    //.property("checked",true)
+		     .on("click", render)
+
+		   lblAfrica.append("span")
+		  .html(d => {
+		   population.set(extractKey(d), +(d.data.Population))
+		   return extractKey(d)
+		   })
+
+		 //Oceania
+		  const lblOceania=  d3
+		  .select("div.oceania")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+		            continent = continentMap.get(iso2.get(extractKey(d)))
+			  return continent == "Oceania" && !defaultCountries.includes(extractKey(d))
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .append("label")
+
+		  lblOceania.append("input")
+		    .classed("country blue",true)
+ 		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    //.property("checked",true)
+		     .on("click", render)
+
+		   lblOceania.append("span")
+		  .html(d => {
+		   population.set(extractKey(d), +(d.data.Population))
+		   return extractKey(d)
+		   })
+
+		 //Asia
+		  const lblAsia=  d3
+		  .select("div.asia")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+		            continent = continentMap.get(iso2.get(extractKey(d)))
+			  return continent == "Asia" && !defaultCountries.includes(extractKey(d))
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .append("label")
+
+		  lblAsia.append("input")
+		    .classed("country blue",true)
+ 		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    //.property("checked",true)
+		     .on("click", render)
+
+		   lblAsia.append("span")
+		  .html(d => {
+		   population.set(extractKey(d), +(d.data.Population))
+		   return extractKey(d)
+		   })
+
+		 //South America
+		  const lblSAmerica=  d3
+		  .select("div.southamerica")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+		            continent = continentMap.get(iso2.get(extractKey(d)))
+			  return continent == "South America" && !defaultCountries.includes(extractKey(d))
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .append("label")
+
+		  lblSAmerica.append("input")
+		    .classed("country blue",true)
+ 		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    //.property("checked",true)
+		     .on("click", render)
+
+		   lblSAmerica.append("span")
+		  .html(d => {
+		   population.set(extractKey(d), +(d.data.Population))
+		   return extractKey(d)
+		   })
+
+		 //North America
+		  const lblNAmerica=  d3
+		  .select("div.northamerica")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+		            continent = continentMap.get(iso2.get(extractKey(d)))
+			  return continent == "North America" && !extractKey(d).includes("US ") && !defaultCountries.includes(extractKey(d))
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .append("label")
+
+		  lblNAmerica.append("input")
+		    .classed("country blue",true)
+ 		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    //.property("checked",true)
+		     .on("click", render)
+
+		   lblNAmerica.append("span")
+		  .html(d => {
+		   population.set(extractKey(d), +(d.data.Population))
+		   return extractKey(d)
+		   })
+
+		 //Popular
+		  const lblPopular=  d3
+		  .select("div.popular")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+		            return defaultCountries.includes(extractKey(d))
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .append("label")
+
+		  lblPopular.append("input")
+		    .classed("country blue",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
 		    .classed("filled-in", true)
 		    .property("checked",true)
 		     .on("click", render)
-		   lbl.append("span")
+
+		   lblPopular.append("span")
 		  .html(d => {
 		   population.set(extractKey(d), +(d.data.Population))
-		   iso2.set(extractKey(d), d.data.iso2)
 		   return extractKey(d)
 		   })
+
+		 //Europe
+		  const lblEurope =  d3
+		  .select("div.europe")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+		            continent = continentMap.get(iso2.get(extractKey(d)))
+			  return continent == "Europe" && !defaultCountries.includes(extractKey(d))
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .append("label")
+
+		  lblEurope.append("input")
+		    .classed("country blue",true)
+ 		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    //.property("checked",true)
+		     .on("click", render)
+
+		   lblEurope.append("span")
+		  .html(d => {
+		   population.set(extractKey(d), +(d.data.Population))
+		   return extractKey(d)
+		   })
+
+		 //Other
+		  const lblOther =  d3
+		  .select("div.other")
+		  .selectAll("label.country")
+		  .data(data.filter(d=> {
+		            continent = continentMap.get(iso2.get(extractKey(d)))
+			  return !continent
+			  })
+		  , d => extractKey(d))
+		  .enter() //only runs once as data series doesnt change
+		  .append("div")
+		  .append("label")
+
+		  lblOther.append("input")
+		    .classed("country blue",true)
+ 		    .attr("value",d => extractKey(d))
+		   .attr("pop",d => +d.data.Population)
+		    .attr("type","checkbox")
+		    .classed("filled-in", true)
+		    //.property("checked",true)
+		     .on("click", render)
+
+		   lblOther.append("span")
+		  .html(d => {
+		   population.set(extractKey(d), +(d.data.Population))
+		   return extractKey(d)
+		   })
+
+		  // console.log(data)
 
 	   M.AutoInit();
 }
 
 function selectall() {
-  d3.selectAll("option.country")
-   .property("selected", d => {
+
+  d3.selectAll(".country")
+   .property("checked", d => {
      return +d.data.Population != 0
      })
-
-  d3.selectAll("input.country")
-   .property("checked",true)
 
       M.AutoInit();
       render()
@@ -501,11 +694,8 @@ function vis(d,key) {
    data =  cleanData(d,key)
 
    //get all selected
-  const filteredCountries = $('select.countries').val()
-  const quickCountries = new Array()
-  $('.country:checkbox:checked').map((i,d) => quickCountries.push($(d).attr("value") ))
-  selectedCountries = new Array()
-   selectedCountries = filteredCountries.concat(quickCountries)
+  const selectedCountries = new Array()
+  $('.country:checkbox:checked').map((i,d) => selectedCountries.push($(d).attr("value") ))
 
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
@@ -660,12 +850,9 @@ function vis_col(d,key) {
    data =  cleanData(d,key)
 
    //get all selected
-   //get all selected
-  const filteredCountries = $('select.countries').val()
-  const quickCountries = new Array()
-  $('.country:checkbox:checked').map((i,d) => quickCountries.push($(d).attr("value") ))
-   selectedCountries = new Array()
-  selectedCountries = filteredCountries.concat(quickCountries)
+  const selectedCountries = new Array()
+  $('.country:checkbox:checked').map((i,d) => selectedCountries.push($(d).attr("value") ))
+
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
