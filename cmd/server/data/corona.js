@@ -50,7 +50,7 @@ async function setUp(data) {
 		  .selectAll("label.country")
 		  .data(data.filter(d=> {
 		            continent = continentMap.get(iso2.get(extractKey(d)))
-		            console.log(continent)
+		            //console.log(continent)
 			  return continent == "Africa" && !defaultCountries.includes(extractKey(d))
 			  })
 		  , d => extractKey(d))
@@ -59,7 +59,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblAfrica.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue africa",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -87,7 +87,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblOceania.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue oceania",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -115,7 +115,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblAsia.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue asia",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -143,7 +143,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblSAmerica.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue southamerica",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -171,7 +171,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblNAmerica.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue northamerica",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -198,7 +198,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblPopular.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue popular",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -226,7 +226,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblEurope.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue europe",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -254,7 +254,7 @@ async function setUp(data) {
 		  .append("label")
 
 		  lblOther.append("input")
-		    .classed("country blue",true)
+		    .classed("country blue other",true)
  		    .attr("value",d => extractKey(d))
 		   .attr("pop",d => +d.data.Population)
 		    .attr("type","checkbox")
@@ -274,21 +274,32 @@ async function setUp(data) {
 }
 
 function selectall() {
-
   d3.selectAll(".country")
    .property("checked", d => {
      return +d.data.Population != 0
      })
 
+  d3.selectAll(".continentSelect")
+   .property("checked",true)
+
       M.AutoInit();
       render()
 }
+
+function selectContinent(el,name) {
+      d3.selectAll("input." + name).property("checked",$(el).prop("checked"))
+      render()
+}
+
 
 function deselectall() {
   d3.selectAll("option.country")
    .property("selected",false)
 
   d3.selectAll("input.country")
+   .property("checked",false)
+
+  d3.selectAll(".continentSelect")
    .property("checked",false)
 
       M.AutoInit();
