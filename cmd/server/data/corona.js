@@ -365,7 +365,10 @@ async function render() {
 	console.log("starting rendering tab2")
 	//hand tidyied csv for now...
 	age_uk = "corona/age_uk_28.csv"
+	region_uk = "corona/region_uk.csv"
 	d3.csv(age_uk, data => {return {data}}).then(data => vis_uk(data,"age_uk"))
+	d3.csv(region_uk, data => {return {data}}).then(data => vis_uk(data,"region_uk"))
+	console.log("ending rendering tab2")
 }
 
 
@@ -959,18 +962,18 @@ svg.append("g")
  // svg.call(hover, path, data, x, y, c);
 }
 
-function vis_uk(d,key) {
-
+function vis_uk(d,key) { //age_series
+	//console.log(key,d)
   // set up controls/geometries for chart
   width = 800
   height = 500
 
   margin = ({top: 20, right: 50, bottom: 30, left: 20})
-//	console.log(key,d)
+
 
 	       const svg = d3.select("svg." + key)
 	      .attr("viewBox", [0, 0, width, height]);
-//	console.log(svg)
+//	console.log(svg) deceased
   // end of set up
 
   // x and y scales
@@ -981,7 +984,7 @@ function vis_uk(d,key) {
   xz = ["01-Mar-20",	"02-Mar-20",	"03-Mar-20",	"04-Mar-20",	"05-Mar-20",	"06-Mar-20",	"07-Mar-20",	"08-Mar-20",	"09-Mar-20",	"10-Mar-20",	"11-Mar-20",	"12-Mar-20",	"13-Mar-20",	"14-Mar-20",	"15-Mar-20",	"16-Mar-20",	"17-Mar-20",	"18-Mar-20",	"19-Mar-20",	"20-Mar-20",	"21-Mar-20",	"22-Mar-20",	"23-Mar-20",	"24-Mar-20",	"25-Mar-20",	"26-Mar-20",	"27-Mar-20",	"28-Mar-20",	"29-Mar-20",	"30-Mar-20",	"31-Mar-20",	"01-Apr-20",	"02-Apr-20",	"03-Apr-20",	"04-Apr-20",	"05-Apr-20",	"06-Apr-20",	"07-Apr-20",	"08-Apr-20",	"09-Apr-20",	"10-Apr-20",	"11-Apr-20",	"12-Apr-20",	"13-Apr-20",	"14-Apr-20",	"15-Apr-20",	"16-Apr-20",	"17-Apr-20",	"18-Apr-20",	"19-Apr-20",	"20-Apr-20",	"21-Apr-20",	"22-Apr-20",	"23-Apr-20",	"24-Apr-20","25-Apr-20","26-Apr-20","27-Apr-20","28-Apr-20"]
 
 //xz = [new Date(2015, 0, 1),new Date(2015, 1, 1),new Date(2015, 2, 1),new Date(2015,3, 1)]
-  n = 5 // number of series
+  n = key == "age_uk" ? 5 : 7  // number of series
  y1Max = 900
   z = d3.scaleSequential(d3.interpolateBlues)
     .domain([-0.5 * n, 1.5 * n])
@@ -1019,31 +1022,62 @@ var stackEx = d3.stack()
     .offset(d3.stackOffsetNone);
 var series = stackEx(data);
 
+var stackRegion = d3.stack()
+    .keys(["East Of England", "London", "Midlands", "North East And Yorkshire", "North West","South East","South West"])
+    .order(d3.stackOrderNone)
+    .offset(d3.stackOffsetNone);
+
+
 
 
   //console.log(d)
   age_array = new Array()
   temp = new Map()
-  d.forEach ( e => {
-  	agroup = e.data["Age group"]
-  	entries = d3.entries(e.data)
-  	//console.log(entries)
-  	//console.log(agroup)
-  	entries.forEach ( f => {
-	  	   if (agroup !== "Total" && f.key !== "Age group" && f.key !== "Up to 01-Mar-20" && f.key !== "") {
-	  	  //console.log(f)
-	  	  item = temp.get(f.key) || {}
-	  	  item["month"]=f.key // ugly hacking so much
-	  	  //console.log(agroup)
-	  	  //console.log(item)
-	  	  item[agroup] = f.value
-		  //console.log(item)
-	  	  temp.set(f.key, item)
-  	  }
-  	})
- 	//console.log(temp)
-  	//console.log(e)
-  })
+  if (key=="age_uk") {
+	  d.forEach ( e => {
+	  	agroup = e.data["Age group"]
+	  	entries = d3.entries(e.data)
+	  	//console.log(entries)
+	  	//console.log(agroup)
+	  	entries.forEach ( f => {
+		  	   if (agroup !== "Total" && f.key !== "Age group" && f.key !== "Up to 01-Mar-20" && f.key !== "") {
+		  	  //console.log(f)
+		  	  item = temp.get(f.key) || {}
+		  	  item["month"]=f.key // ugly hacking so much
+		  	  //console.log(agroup)
+		  	  //console.log(item)
+		  	  item[agroup] = f.value
+			  //console.log(item)
+		  	  temp.set(f.key, item)
+	  	  }
+	  	})
+	 	//console.log(temp)
+	  	//console.log(e)
+	  })
+  }
+
+   if (key=="region_uk") {
+	  d.forEach ( e => {
+	  	agroup = e.data["NHS England Region"]
+	  	entries = d3.entries(e.data)
+	  	//console.log(entries)
+	  	//console.log(agroup)
+	  	entries.forEach ( f => {
+		  	   if (agroup !== "England" && f.key !== "NHS England Region" && f.key !== "Up to 01-Mar-20" && f.key !== "") {
+		  	  //console.log(f)
+		  	  item = temp.get(f.key) || {}
+		  	  item["month"]=f.key // ugly hacking so much
+		  	  //console.log(agroup)
+		  	  //console.log(item)
+		  	  item[agroup] = f.value
+			  //console.log(item)
+		  	  temp.set(f.key, item)
+	  	  }
+	  	})
+	 	//console.log(temp)
+	  	//console.log(e)
+	  })
+  }
 
  // console.log(temp)
   temp.forEach ( d => {
@@ -1051,9 +1085,11 @@ var series = stackEx(data);
     age_array.push(d)
   })
 
-  //console.log(age_series)
-var age_series = stackEx(age_array);
+//console.log(key,age_array)
 
+  //console.log(age_series)
+var age_series = key == "age_uk" ?  stackEx(age_array) : stackRegion(age_array);
+//console.log(key,age_series)
   // draw bars
   const rect = svg.selectAll("g")
     .data(age_series)
@@ -1081,6 +1117,8 @@ var age_series = stackEx(age_array);
 //	        	        console.log("i",i)
 //	        	        console.log("x",x(d.month))
 
+
+
 		        return x(i)
 	        })
 	        .attr("width", x.bandwidth());
@@ -1095,7 +1133,7 @@ var age_series = stackEx(age_array);
 	        .attr("x", -width/2)
 	        .attr("text-anchor", "end")
 	        .attr("font-weight", "bold")
-	        .text("Deceased: March 1 to April 28th 2020"))
+	        .text("NHS England Deceased: Mar 1 to Apr 28 2020"))
 
     xAxis = g => g
     .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -1115,7 +1153,8 @@ svg.append("g")
 
 
 
-  var legendOrdinal = d3.legendColor()
+  var legendOrdinal = key == "age_uk" ?
+   d3.legendColor()
   //.orient("horizontal")
   .labels(["0 - 19 yrs","20 - 39","40 - 59","60 - 79","80+"])
   .cellFilter(function(d){ return d.label !== "e" })
@@ -1124,7 +1163,18 @@ svg.append("g")
   .labelAlign("end")
   .labelOffset(20)
   .ascending(true)
-  .scale(z);
+  .scale(z)
+  :
+   d3.legendColor()
+  //.orient("horizontal")
+  .labels(["East Of England", "London", "Midlands", "North East And Yorkshire", "North West","South East","South West"])
+  .cellFilter(function(d){ return d.label !== "e" })
+  .shape("circle")
+  .shapePadding(25)
+  .labelAlign("end")
+  .labelOffset(20)
+  .ascending(true)
+  .scale(z)
 
 
 transitionStacked().then(svg.select(".legendOrdinal").call(legendOrdinal))
