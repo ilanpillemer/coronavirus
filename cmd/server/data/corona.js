@@ -1095,7 +1095,7 @@ var age_series = stackEx(age_array);
 	        .attr("x", -width/2)
 	        .attr("text-anchor", "end")
 	        .attr("font-weight", "bold")
-	        .text("Deceased: March 1 to April 24th 2020"))
+	        .text("Deceased: March 1 to April 28th 2020"))
 
     xAxis = g => g
     .attr("transform", `translate(0,${height - margin.bottom})`)
