@@ -962,70 +962,63 @@ svg.append("g")
  // svg.call(hover, path, data, x, y, c);
 }
 
-function vis_uk(d,key) { //age_series
-	//console.log(key,d)
-  // set up controls/geometries for chart
+
+function vis_uk(d,key,flip) {
   width = 800
   height = 500
-
-  margin = ({top: 20, right: 50, bottom: 30, left: 20})
-
-
-	       const svg = d3.select("svg." + key)
-	      .attr("viewBox", [0, 0, width, height]);
-//	console.log(svg) deceased
-  // end of set up
-
-  // x and y scales
-  //xz is the shared x values
-  //hard coded various variables during first phase
-//  xz = ["Age group",	"Up to 01-Mar-20",	"01-Mar-20",	"02-Mar-20",	"03-Mar-20",	"04-Mar-20",	"05-Mar-20",	"06-Mar-20",	"07-Mar-20",	"08-Mar-20",	"09-Mar-20",	"10-Mar-20",	"11-Mar-20",	"12-Mar-20",	"13-Mar-20",	"14-Mar-20",	"15-Mar-20",	"16-Mar-20",	"17-Mar-20",	"18-Mar-20",	"19-Mar-20",	"20-Mar-20",	"21-Mar-20",	"22-Mar-20",	"23-Mar-20",	"24-Mar-20",	"25-Mar-20",	"26-Mar-20",	"27-Mar-20",	"28-Mar-20",	"29-Mar-20",	"30-Mar-20",	"31-Mar-20",	"01-Apr-20",	"02-Apr-20",	"03-Apr-20",	"04-Apr-20",	"05-Apr-20",	"06-Apr-20",	"07-Apr-20",	"08-Apr-20",	"09-Apr-20",	"10-Apr-20",	"11-Apr-20",	"12-Apr-20",	"13-Apr-20",	"14-Apr-20",	"15-Apr-20",	"16-Apr-20",	"17-Apr-20",	"18-Apr-20",	"19-Apr-20",	"20-Apr-20",	"21-Apr-20",	"22-Apr-20",	"23-Apr-20",	"24-Apr-20"]
-
-  xz = ["01-Mar-20",	"02-Mar-20",	"03-Mar-20",	"04-Mar-20",	"05-Mar-20",	"06-Mar-20",	"07-Mar-20",	"08-Mar-20",	"09-Mar-20",	"10-Mar-20",	"11-Mar-20",	"12-Mar-20",	"13-Mar-20",	"14-Mar-20",	"15-Mar-20",	"16-Mar-20",	"17-Mar-20",	"18-Mar-20",	"19-Mar-20",	"20-Mar-20",	"21-Mar-20",	"22-Mar-20",	"23-Mar-20",	"24-Mar-20",	"25-Mar-20",	"26-Mar-20",	"27-Mar-20",	"28-Mar-20",	"29-Mar-20",	"30-Mar-20",	"31-Mar-20",	"01-Apr-20",	"02-Apr-20",	"03-Apr-20",	"04-Apr-20",	"05-Apr-20",	"06-Apr-20",	"07-Apr-20",	"08-Apr-20",	"09-Apr-20",	"10-Apr-20",	"11-Apr-20",	"12-Apr-20",	"13-Apr-20",	"14-Apr-20",	"15-Apr-20",	"16-Apr-20",	"17-Apr-20",	"18-Apr-20",	"19-Apr-20",	"20-Apr-20",	"21-Apr-20",	"22-Apr-20",	"23-Apr-20",	"24-Apr-20","25-Apr-20","26-Apr-20","27-Apr-20","28-Apr-20"]
-
-//xz = [new Date(2015, 0, 1),new Date(2015, 1, 1),new Date(2015, 2, 1),new Date(2015,3, 1)]
-  n = key == "age_uk" ? 5 : 7  // number of series
  y1Max = 900
-  z = d3.scaleSequential(d3.interpolateBlues)
-    .domain([-0.5 * n, 1.5 * n])
-
-    z = d3.scaleOrdinal(d3.schemeCategory10);
-
+  margin = ({top: 20, right: 50, bottom: 30, left: 20})
+  xz = ["01-Mar-20",	"02-Mar-20",	"03-Mar-20",	"04-Mar-20",	"05-Mar-20",	"06-Mar-20",	"07-Mar-20",	"08-Mar-20",	"09-Mar-20",	"10-Mar-20",	"11-Mar-20",	"12-Mar-20",	"13-Mar-20",	"14-Mar-20",	"15-Mar-20",	"16-Mar-20",	"17-Mar-20",	"18-Mar-20",	"19-Mar-20",	"20-Mar-20",	"21-Mar-20",	"22-Mar-20",	"23-Mar-20",	"24-Mar-20",	"25-Mar-20",	"26-Mar-20",	"27-Mar-20",	"28-Mar-20",	"29-Mar-20",	"30-Mar-20",	"31-Mar-20",	"01-Apr-20",	"02-Apr-20",	"03-Apr-20",	"04-Apr-20",	"05-Apr-20",	"06-Apr-20",	"07-Apr-20",	"08-Apr-20",	"09-Apr-20",	"10-Apr-20",	"11-Apr-20",	"12-Apr-20",	"13-Apr-20",	"14-Apr-20",	"15-Apr-20",	"16-Apr-20",	"17-Apr-20",	"18-Apr-20",	"19-Apr-20",	"20-Apr-20",	"21-Apr-20",	"22-Apr-20",	"23-Apr-20",	"24-Apr-20","25-Apr-20","26-Apr-20","27-Apr-20","28-Apr-20"]
 	x = d3.scaleBand()
 	    .domain(xz.map( (d,i) => i))
 	    .rangeRound([margin.left, width - margin.right])
 	    .padding(0.08)
 
+
+
 	    y = d3.scaleLinear()
     .domain([0, y1Max])
     .range([height - margin.bottom, margin.top])
 
-  //
-  // set up layout
-  // need something that looks like this....
-//  var data = [
-//  {month: new Date(2015, 0, 1), apples: 3840, bananas: 1920, cherries: 960, dates: 400},
-//  {month: new Date(2015, 1, 1), apples: 1600, bananas: 1440, cherries: 960, dates: 400},
-//  {month: new Date(2015, 2, 1), apples:  640, bananas:  960, cherries: 640, dates: 400},
-//  {month: new Date(2015, 3, 1), apples:  320, bananas:  480, cherries: 640, dates: 400}
-//]; ie
-  var data = [
-  {month: new Date(2015, 0, 1), "0 - 19 yrs": 3840, "20 - 39": 1920, "40 - 59": 960, "60 - 79": 400, "80+": 400 },
-  {month: new Date(2015, 1, 1), "0 - 19 yrs": 1600, "20 - 39": 1440, "40 - 59": 960, "60 - 79": 400,"80+": 400 },
-  {month: new Date(2015, 2, 1), "0 - 19 yrs":  640, "20 - 39":  960, "40 - 59": 640, "60 - 79": 400,"80+": 400 },
-  {month: new Date(2015, 3, 1), "0 - 19 yrs":  320, "20 - 39":  480, "40 - 59": 640, "60 - 79": 400,"80+": 400 }
-];
+//oh boy this is getting really ugly... super duper refactor time approaching
+
+if (flip) {
+	if (d3.select("#gos").property("checked")) {
+	 transitionGrouped("region_uk")
+	 transitionGrouped("age_uk")
+	} else {
+	transitionStacked("region_uk")
+	transitionStacked("age_uk")
+	}
+	return
+}
+
+//age_series
+	//console.log(key,d)
+  // set up controls/geometries for chart
+
+
+	       const svg = d3.select("svg." + key)
+	      .attr("viewBox", [0, 0, width, height]);
+
+  n = key == "age_uk" ? 5 : 7  // number of series
+
+  z = d3.scaleSequential(d3.interpolateBlues)
+    .domain([-0.5 * n, 1.5 * n])
+
+    z = d3.scaleOrdinal(d3.schemeCategory10);
+
+
 
 var stackEx = d3.stack()
     .keys(["0 - 19 yrs", "20 - 39", "40 - 59", "60 - 79", "80+"])
     .order(d3.stackOrderNone)
     .offset(d3.stackOffsetNone);
-var series = stackEx(data);
 
 var stackRegion = d3.stack()
     .keys(["East Of England", "London", "Midlands", "North East And Yorkshire", "North West","South East","South West"])
-    .order(d3.stackOrderNone)
-    .offset(d3.stackOffsetNone);
+    //.order(d3.stackOrderNone)
+    //.offset(d3.stackOffsetNone);
 
 
 
@@ -1103,8 +1096,14 @@ var age_series = key == "age_uk" ?  stackEx(age_array) : stackRegion(age_array);
       .attr("width", x.bandwidth())
       .attr("height", 0);
 
-	  async function transitionStacked() {
-	    y.domain([0, y1Max]);
+	  async function transitionStacked(inKey) {
+	  key = inKey || key
+	    y.domain([0, 900]);
+	const svg = d3.select("svg." + key)
+	 svg.select("#yaxis").remove()
+
+	  const rect = svg.selectAll("g")
+	    .selectAll("rect")
 
 	    rect.transition()
 	        .duration(500)
@@ -1113,18 +1112,9 @@ var age_series = key == "age_uk" ?  stackEx(age_array) : stackRegion(age_array);
 	        .attr("height", d => y(d[0]) - y(d[1]))
 	      .transition()
 	        .attr("x", (d, i) => {
-//	        	        console.log("d",d)
-//	        	        console.log("i",i)
-//	        	        console.log("x",x(d.month))
-
-
-
 		        return x(i)
 	        })
 	        .attr("width", x.bandwidth());
-	  }
-
-
 	   yAxis = g => g
 	    .attr("transform", `translate(${width-margin.right+2},0)`)
 	    .call(d3.axisRight(y).ticks(5).tickFormat(d3.format(",.0f")))
@@ -1134,6 +1124,51 @@ var age_series = key == "age_uk" ?  stackEx(age_array) : stackRegion(age_array);
 	        .attr("text-anchor", "end")
 	        .attr("font-weight", "bold")
 	        .text("NHS England Deceased: Mar 1 to Apr 28 2020"))
+	 svg.append("g")
+	      .attr("id","yaxis")
+	      .call(yAxis);
+
+	  }
+
+	  async function transitionGrouped(inKey) {
+	  key = inKey || key
+
+
+	   key == "region_uk" ?  y.domain([0, 250]) : y.domain([0, 500]) ;
+	const svg = d3.select("svg." + key)
+	 svg.select("#yaxis").remove()
+	  const rect = svg.selectAll("g")
+	    .selectAll("rect")
+
+	    current = 1
+	    rect.transition()
+	        .duration(500)
+	        .delay((d, i) => i * 20)
+	        .attr("x", (d, i) => {
+		           ret = current
+		           if (i==58) current = current + 1
+		  return x(i) + x.bandwidth() / n * current
+	        })
+	        .attr("width", x.bandwidth() / n)
+	      .transition()
+	        .attr("y", d => y(d[1] - d[0]))
+	        .attr("height", d => y(0) - y(d[1] - d[0]));
+	   yAxis = g => g
+	    .attr("transform", `translate(${width-margin.right+2},0)`)
+	    .call(d3.axisRight(y).ticks(5).tickFormat(d3.format(",.0f")))
+	    .call(g => g.select(".domain").remove())
+	    .call(g => g.select(".tick:last-of-type text").clone()
+	        .attr("x", -width/2)
+	        .attr("text-anchor", "end")
+	        .attr("font-weight", "bold")
+	        .text("NHS England Deceased: Mar 1 to Apr 28 2020"))
+	 svg.append("g")
+	      .attr("id","yaxis")
+	      .call(yAxis);
+	  }
+
+
+
 
     xAxis = g => g
     .attr("transform", `translate(0,${height - margin.bottom})`)
@@ -1143,9 +1178,7 @@ svg.append("g")
   .attr("class", "legendOrdinal")
   .attr("transform", "translate(20,20)")
 
-  svg.append("g")
-      .attr("id","yaxis")
-      .call(yAxis)
+
 
   svg.append("g")
       .attr("id","xaxis")
@@ -1178,6 +1211,10 @@ svg.append("g")
 
 
 transitionStacked().then(svg.select(".legendOrdinal").call(legendOrdinal))
+//transitionStacked().then(svg.select(".legendOrdinal").call(legendOrdinal))
+
+//transitionStacked().then(svg.select(".legendOrdinal").call(legendOrdinal))
+//transitionGrouped().then(svg.select(".legendOrdinal").call(legendOrdinal))
 //svg.select(".legendOrdinal")
 //  .call(legendOrdinal);
 
