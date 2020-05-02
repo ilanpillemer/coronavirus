@@ -703,6 +703,7 @@ function cleanGlobal(d,key) {
   return data
 }
 
+//bookmark
 
 function vis(d,key) {
    data =  cleanData(d,key)
@@ -775,11 +776,21 @@ function vis(d,key) {
      .attr("viewBox", [0, 0, width, height])
      .style("overflow", "visible");
 
-   svg.select("g#paths").remove()
    svg.select("g#names").remove()
    svg.select("g#dots").remove()
    svg.select("g#yaxis").remove()
    svg.select("g#xaxis").remove()
+
+  const path = svg.selectAll("g")
+       .data([0])
+       .join("g")
+      .attr("id","paths")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+    .selectAll("path")
 
   svg.append("g")
       .attr("id","xaxis")
@@ -789,36 +800,17 @@ function vis(d,key) {
       .attr("id","yaxis")
       .call(yAxis);
 
-
-
-  const path = svg.append("g")
-      .attr("id","paths")
-      .attr("fill", "none")
-     .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("stroke-linejoin", "round")
-      .attr("stroke-linecap", "round")
-    .selectAll("path")
-    .data(data.series, d => d.name)
-    .join("path")
+    path.data(data.series, d => d.name)
+       .join("path")
+       .transition()
+      .duration(500)
+       .ease(d3.easeCubic)
       .attr("name",d.name)
       .style("mix-blend-mode", "multiply")
       .attr("stroke", d => {
       	return c(d.name)
       })
       .attr("d", d => line(d.values))
-
-//     svg.append("g")
-//            .attr("id","dots")
-//           .selectAll("circle")
-//           .data(data.series, d => d.name)
-//           .enter()
-//           .append("circle")
-//           .attr("r", 1.0)
-//           .attr("cx",width - margin.right)
-//           .attr("cy", (d,i) => y(d.values[d.values.length-1]))
-//           .append("text")
-
 
 	if (d3.select("#normaliseTime").property("checked")) {
 	        svg.append("g")
@@ -922,19 +914,20 @@ let y = d3.scaleBand()
      .attr("viewBox", [0, 0, width, height])
      .style("overflow", "visible");
 
-   svg.select("g#bars").remove()
    svg.select("g#names").remove()
    svg.select("g#xaxis").remove()
 
-  svg.append("g")
-      .attr("id","xaxis")
-      .call(xAxis);
 
-const path  = svg.append("g")
+
+const path  =  svg.selectAll("g")
+       .data([0])
+       .join("g")
       .attr("id","bars")
     .selectAll("rect")
     .data(data.series, d => d.name)
     .join("rect")
+      .transition()
+       .duration(500)
       .attr("x", x(0))
       .attr("y", (d, i) => y(i))
        .attr("fill", d =>  c(d.name))
@@ -958,6 +951,10 @@ svg.append("g")
       .attr("y", (d, i) => y(i) + y.bandwidth() / 2)
       .attr("dy", "0.35em")
       .text(d => d.name);
+
+ svg.append("g")
+      .attr("id","xaxis")
+      .call(xAxis);
 
  // svg.call(hover, path, data, x, y, c);
 }
