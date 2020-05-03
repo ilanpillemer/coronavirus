@@ -597,7 +597,6 @@ function cleanDailyZa(incoming, key) {
 	      previous = d.values.slice(0)
 	      previous.unshift(0)
 	      previous.map( (e,i) => {
-	      	       console.log(previous[i+1])
 	      	       if (previous[i+1]==0) {
 	      	        previous[i+1]=e
 	      	       }
