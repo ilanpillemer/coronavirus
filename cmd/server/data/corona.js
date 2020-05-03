@@ -339,7 +339,7 @@ async function render() {
 	  // daily figures
 	   daily = "corona/daily.csv"  // temporary test csv for now
 	    d3.csv(daily, d => {
-	       //console.log("testing",d)
+	       //console.log("jh",d)
 	       return {
 		    Day: d.Day,
 		    name: d.Country_Region + " " + d.Province_State,
@@ -359,6 +359,7 @@ async function render() {
 	     }).then(data => vis_col(data,"daily_col"))
 
 	d3.select("#scale").on("change", render)
+	d3.select("#scaleZa").on("change", render)
 	d3.select("#normalise").on("change", render)
 	d3.select("#normaliseTime").on("change", render)
 
@@ -368,7 +369,11 @@ async function render() {
 	region_uk = "corona/region_uk.csv"
 	d3.csv(age_uk, data => {return {data}}).then(data => vis_uk(data,"age_uk"))
 	d3.csv(region_uk, data => {return {data}}).then(data => vis_uk(data,"region_uk"))
-	console.log("ending rendering tab2")
+
+
+	console.log("ending rendering tab3")
+	  za_confirmed = "https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv"
+	d3.csv(za_confirmed, data => {return {data}}).then(data => vis_za(data,"za_confirmed"))
 }
 
 
@@ -531,6 +536,11 @@ function  reloadcolors() {
 
 
 function cleanData(d,key) {
+	if (key.includes("za")) {
+	   return cleanDailyZa(d,key)
+	}
+
+
 	if (key == "daily" || key == "daily_col" ) {
 		return cleanDaily(d,key)
 	}
@@ -539,6 +549,49 @@ function cleanData(d,key) {
 	}
 	return cleanGlobal(d,key)
 }
+
+function breakout(provinces, str, d) {
+	  p = provinces.get(str) || { name: str, values: new Array()}
+	  p.values.push(+d.data[str])
+	  provinces.set(str,p)
+	  return provinces
+}
+
+function cleanDailyZa(incoming, key) {
+	//console.log("start",incoming)
+	columns = []
+	s = []
+	provinces = new Map()
+	incoming.forEach( d => {
+	provinces = breakout(provinces,"KZN",d)
+	provinces = breakout(provinces,"EC",d)
+	provinces = breakout(provinces,"FS",d)
+	provinces = breakout(provinces,"GP",d)
+	provinces = breakout(provinces,"LP",d)
+	provinces = breakout(provinces,"MP",d)
+	provinces = breakout(provinces,"NC",d)
+	provinces = breakout(provinces,"NW",d)
+	provinces = breakout(provinces,"UNKNOWN",d)
+	provinces = breakout(provinces,"WC",d)
+	  columns.push(d.data.date)
+	})
+
+	provinces.forEach(e => {
+ 	  s.push(e)
+ 	})
+ 	//console.log(columns)
+ 	  var outgoing = {
+	    //y: key,
+	    y: "confirmed cases in South Africa",
+	    series: s,
+	   dates: columns.map(d3.utcParse("%d-%m-%Y")) //05-03-2020
+  	}
+
+  	//console.log("cleaned",outgoing)
+  	return outgoing
+  }
+
+
 
 function cleanDaily(incoming,key) {
 	columns = []
@@ -566,6 +619,8 @@ function cleanDaily(incoming,key) {
 		series: series,
 		dates: columns.map(d3.utcParse("%m/%d/%Y"))
 	}
+
+
 
 
 
@@ -700,6 +755,7 @@ function cleanGlobal(d,key) {
      d.values = d.values.map( (e,i) => e / (+population.get(d.name) + 1) * 10000000)
    })
   }
+
   return data
 }
 
@@ -715,10 +771,6 @@ function vis(d,key) {
   data.series = data.series.filter(d => {
     return  selectedCountries.includes(d.name)
    })
-
-
-
-
 
   const c = d3.scaleOrdinal(d3.schemeCategory10).domain(selectedCountries)
   const showSqrt = d3.select("#scale").property("checked")
@@ -1214,6 +1266,122 @@ transitionStacked().then(svg.select(".legendOrdinal").call(legendOrdinal))
 //transitionGrouped().then(svg.select(".legendOrdinal").call(legendOrdinal))
 //svg.select(".legendOrdinal")
 //  .call(legendOrdinal);
+
+
+}
+
+function vis_za(d,key) {
+   data =  cleanData(d,key)
+
+  const c = d3.scaleOrdinal(d3.schemeCategory10).domain(["KZN","EC","FS","GP","LP","MP","NC","NW","UNKNOWN","WC"])
+  const showSqrt = d3.select("#scaleZa").property("checked")
+  const factor = showSqrt ? 4 : 4
+  //const watermark = d3.max(data.series, d => d3.median(d.values)) / factor
+  width = 800
+  height = 500
+  margin = ({top: 20, right: 50, bottom: 30, left: 20})
+
+  let x =
+  d3.scaleUtc()
+    .domain(d3.extent(data.dates))
+    .range([margin.left, width - margin.right])
+
+   let y = showSqrt ?
+    d3.scaleLog().clamp(true)
+    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
+    .range([height - margin.bottom, margin.top])
+   :
+     d3.scaleLinear().clamp(true)
+    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
+    .range([height - margin.bottom, margin.top])
+
+
+
+    xAxis = g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x).ticks(width / 80).tickSizeOuter(0))
+
+    let yformat = d3.format(",.0f")
+
+    yAxis = g => g
+    .attr("transform", `translate(${width-margin.right+2},0)`)
+    .call(d3.axisRight(y).ticks(5).tickFormat(d3.format(",.0f")))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.select(".tick:last-of-type text").clone()
+        .attr("x", -width/2)
+        .attr("text-anchor", "end")
+        .attr("font-weight", "bold")
+        .text(data.y))
+
+        line = d3.line()//.curve(d3.curveMonotoneX)
+    .defined( d => {
+     return !isNaN(d) && d!=0
+     })
+    .x((d, i) => x(data.dates[i]))
+    .y(d => y(d))
+
+
+     svg = d3.select("svg." + key)
+     .attr("viewBox", [0, 0, width, height])
+     .style("overflow", "visible");
+
+   svg.select("g#names").remove()
+   svg.select("g#dots").remove()
+   svg.select("g#yaxis").remove()
+   svg.select("g#xaxis").remove()
+
+  const path = svg.selectAll("g")
+       .data([0])
+       .join("g")
+      .attr("id","paths")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round")
+    .selectAll("path")
+
+  svg.append("g")
+      .attr("id","xaxis")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("id","yaxis")
+      .call(yAxis);
+
+    path.data(data.series, d => d.name)
+       .join("path")
+       .transition()
+      .duration(500)
+       .ease(d3.easeCubic)
+      .attr("name",d.name)
+      .style("mix-blend-mode", "multiply")
+      .attr("stroke", d => {
+      	return c(d.name)
+      })
+      .attr("d", d => line(d.values))
+
+
+	        svg.append("g")
+	             .attr("id","names")
+	             .selectAll("g")
+	            .data(data.series, d => d.name)
+	            .enter()
+	           .append("text")
+	           .attr("font-family", "sans-serif")
+	           .attr("font-size", 10)
+	           .attr("text-anchor", "end")
+	           .attr("x",width - margin.right - 3)
+	           .attr("y", (d,i) => y(d.values[d.values.length-1]))
+	           .text((d) => {
+	             return d.name
+	           } )
+
+
+   //console.log(data)
+//  svg.call(hover, path, data, x, y, c);
+
+
 
 
 }

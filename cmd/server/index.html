@@ -42,6 +42,7 @@
 	      <ul class="tabs tabs-transparent">
 	        <li class="tab"><a class="active" href="#globalvis">Global Visualisation</a></li>
 	        <li class="tab"><a href="#ukanalysis">Analysis Visualisation</a></li>
+	        <li class="tab"><a href="#southafrica">South Africa</a></li>
 	        <li class="tab"><a href="#sources">Data Sources</a></li>
 	       <!--<li class="tab"><a href="#surveys">Surveys to Support</a></li>-->
 	       <li class="tab"><a href="#issues">Issues and Requests</a></li>
@@ -56,7 +57,6 @@
       <div class="col s2">
         <!-- Grey navigation panel -->
         	  <!-- Switch -->
-        	  <h5>controls</h5>
         	  <div class="row">
 	        	  <div class="col">
 			  <div class="switch left" >
@@ -66,7 +66,7 @@
 			      <span class="lever"></span>
 			      Log
 			    </label>
-			  </div>
+			</div>
 		  </div>
 	  </div>
         	  <div class="row">
@@ -372,6 +372,50 @@
 </div>
 <!-- end ukanalysis tab>
 
+<!--- southafrica tab -->
+<div id="southafrica" class="blue lighten-4">
+   <div class="row">
+        <!-- Grey navigation panel -->
+      <div class="col s2">
+	        	  <div class="col">
+			  <div class="switch left" >
+			    <label>
+			      Linear
+			      <input type="checkbox" id="scaleZa">
+			      <span class="lever"></span>
+			      Log
+			    </label>
+			</div>
+		  </div>
+      </div>
+        <!-- End of Grey navigation panel -->
+        <!-- graph page content  -->
+	<div class="col s10" >
+	        <div class="row">
+	                 <div class="col s3">
+			      <div class="card blue-grey darken-1">
+			        <div class="card-content white-text">
+			          <span class="card-title">Data Source</span>
+			          <p>Data Science for Social Impact Research Group @ University of Pretoria, Coronavirus COVID-19 (2019-nCoV) Data Repository for South Africa</p>
+			          <p>COVID 19 Data for South Africa created, maintained and hosted by Data Science for Social Impact research group, led by Dr. Vukosi Marivate, at the University of Pretoria.
+
+Disclaimer: We have worked to keep the data as accurate as possible. We collate the COVID 19 reporting data from NICD and DoH. We only update that data once there is an official report or statement. For the other data, we work to keep the data as accurate as possible. If you find errors. Make a pull request.</p>
+			        </div>
+			        <div class="card-action">
+			          <a href="https://github.com/dsfsi/covid19za">Repository</a>
+			        </div>
+			      </div>
+	                 </div>
+	 	       <div class="col s5">
+		 	<svg class="za_confirmed white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+		       </div>
+		</div>
+	 </div>
+    </div>
+  <!-- End of graph page content  -->
+</div>
+<!-- end southafrica tab>
+
 <!--- source etc tab -->
 <div id="sources" class="blue lighten-4">
    <div class="row">
@@ -611,6 +655,7 @@ Every piece of data includes GeoJSON and population data, cites the source from 
                 <ul>
                   <li><a class="grey-text text-lighten-3" href="https://github.com/CSSEGISandData/COVID-19">John Hopkins CSSE</a></li>
 	         <li><a class="grey-text text-lighten-3" href="https://www.england.nhs.uk/statistics/statistical-work-areas/covid-19-daily-deaths/">NHS England</a></li>
+	         <li><a class="grey-text text-lighten-3" href="https://github.com/dsfsi/covid19za">Data Science for Social Impact Research group based at the University of Pretoria</a></li>
 
                   <!--
                   <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
