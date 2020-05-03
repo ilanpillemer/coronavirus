@@ -374,6 +374,7 @@ async function render() {
 	console.log("ending rendering tab3")
 	  za_confirmed = "https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv"
 	d3.csv(za_confirmed, data => {return {data}}).then(data => vis_za(data,"za_confirmed"))
+	d3.csv(za_confirmed, data => {return {data}}).then(data => vis_za(data,"za_confirmed_delta"))
 }
 
 
@@ -588,6 +589,40 @@ function cleanDailyZa(incoming, key) {
   	}
 
   	//console.log("cleaned",outgoing)
+	  if (key.includes("delta")) {
+	   period = + ( $("input#deltaaverageZa").val() )
+	   period = period || 14
+	    outgoing.y = outgoing.y + " (per day averaged over " + period + " days)"
+	    outgoing.series.forEach( d=> {
+	      previous = d.values.slice(0)
+	      previous.unshift(0)
+	      previous.map( (e,i) => {
+	      	       console.log(previous[i+1])
+	      	       if (previous[i+1]==0) {
+	      	        previous[i+1]=e
+	      	       }
+
+
+		      return e
+	      })
+	      d.values = d.values.map( (e,i) => previous[i+1] - previous[i] )
+	   })
+
+		outgoing.series.forEach( d=> {
+		  ghost = d.values.slice(0)
+		  for (let i  = 1; i < period; i++) {
+		   ghost.unshift(0)
+		  }
+		  d.values = d.values.map( (e,i) => {
+		          sum = ghost[i]
+			 for (let j  = 1; j < period; j++) {
+			   sum = sum + ghost[i + j]
+			  }
+			  return ( sum / period )
+			  })
+		})
+
+	  }
   	return outgoing
   }
 

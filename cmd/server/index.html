@@ -377,6 +377,7 @@
    <div class="row">
         <!-- Grey navigation panel -->
       <div class="col s2">
+       		  <div class="row">
 	        	  <div class="col">
 			  <div class="switch left" >
 			    <label>
@@ -387,6 +388,25 @@
 			    </label>
 			</div>
 		  </div>
+		  </div> <!-- row -->
+      <div class="row">
+	      <div class="col">
+		        <div class="input-field">
+		          <input value="7" id="deltaaverageZa" type="text" class="validate">
+		          <label for="email">daily delta average</label>
+		          <span class="helper-text" data-error="invalid value, please put a reasonable number" >change the averaging of the daily counts </span>
+		        </div>
+	      </div>
+      </div>
+           <div class="row">
+   	        <div class="col">
+	 	          <div class="left">
+				   <button class="btn waves-effect waves-light center" type="submit" name="action" onclick="render()" id="filterButton">Apply Changes
+				    <i class="material-icons right">send</i>
+				  </button>
+		            </div>
+		    </div>
+	    </div>
       </div>
         <!-- End of Grey navigation panel -->
         <!-- graph page content  -->
@@ -408,6 +428,12 @@ Disclaimer: We have worked to keep the data as accurate as possible. We collate 
 	                 </div>
 	 	       <div class="col s5">
 		 	<svg class="za_confirmed white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+		       </div>
+		</div>
+		<div class="row">
+		<div class="col s3"></div>
+	 	       <div class="col s5">
+		 	<svg class="za_confirmed_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
 		       </div>
 		</div>
 	 </div>
