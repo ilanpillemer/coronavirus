@@ -343,26 +343,30 @@
 		       Grouped
 		    </label>
 		  </div>
+	                 <div class="col">
+		<h6>Data Source</h6>
+	 	<p> The charts shown on this tab are not yet being updated automatically. <p>
+	 	<p> This section contains information on deaths of patients who have died in hospitals in England and had tested positive for COVID-19 at time of death. All deaths are recorded against the date of death rather than the date the deaths were announced. Interpretation of the figures should take into account the fact that totals by date of death, particularly for most recent days, are likely to be updated in future releases. For example as deaths are confirmed as testing positive for COVID-19, as more post-mortem tests are processed and data from them are validated. Any changes are made clear in the daily files. </p>
+	 	</br>
+	 	<p> These figures do not include deaths outside hospital, such as those in care homes. This approach makes it possible to compile deaths data on a daily basis using up to date figures. <p>
+
+	                 </div>
       </div>
         <!-- End of Grey navigation panel -->
         <!-- graph page content  -->
       <div class="col s10" >
         <div class="row">
- 	       <div class="col s3">
-	 	<p>These charts breakdown the deaths in UK from the statistics provided by NHS England. Consult the sources for more details about the data and terms of use.</p>
-	 	<p> The charts shown on this tab are not yet being updated automatically. The current data represents the data that was published and available on the 29th April 2020.<p>
-	 	<p> This section contains information on deaths of patients who have died in hospitals in England and had tested positive for COVID-19 at time of death. All deaths are recorded against the date of death rather than the date the deaths were announced. Interpretation of the figures should take into account the fact that totals by date of death, particularly for most recent days, are likely to be updated in future releases. For example as deaths are confirmed as testing positive for COVID-19, as more post-mortem tests are processed and data from them are validated. Any changes are made clear in the daily files. </p>
-	 	</br>
-	 	<p> These figures do not include deaths outside hospital, such as those in care homes. This approach makes it possible to compile deaths data on a daily basis using up to date figures. <p>
+
+
+ 	       <div class="col s6">
+	 	<svg class="age_uk white lighten-5" style="width:880px;height:550px;border:1px lightgray solid;" />
 	       </div>
- 	       <div class="col s5">
-	 	<svg class="age_uk white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
-	       </div>
+
 	       </div>
 	       <div class="row">
-	       <div class="col s3">	       </div>
- 	       <div class="col s5">
-	 	<svg class="region_uk white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+
+ 	       <div class="col s6">
+	 	<svg class="region_uk white lighten-5" style="width:880px;height:550px;border:1px lightgray solid;" />
 	       </div>
 	       </div>
  	</div>
@@ -407,36 +411,40 @@
 		            </div>
 		    </div>
 	    </div>
+	                 <div class="col">
+	                 		 <h6>Data Source</h6>
+			          <p>Data Science for Social Impact Research Group @ University of Pretoria, Coronavirus COVID-19 (2019-nCoV) Data Repository for South Africa</p>
+	                 </div>
       </div>
         <!-- End of Grey navigation panel -->
         <!-- graph page content  -->
 	<div class="col s10" >
 	        <div class="row">
-	                 <div class="col s3">
-			      <div class="card blue-grey darken-1">
-			        <div class="card-content white-text">
-			          <span class="card-title">Data Source</span>
-			          <p>Data Science for Social Impact Research Group @ University of Pretoria, Coronavirus COVID-19 (2019-nCoV) Data Repository for South Africa</p>
-			          <p>COVID 19 Data for South Africa created, maintained and hosted by Data Science for Social Impact research group, led by Dr. Vukosi Marivate, at the University of Pretoria.
-
-Disclaimer: We have worked to keep the data as accurate as possible. We collate the COVID 19 reporting data from NICD and DoH. We only update that data once there is an official report or statement. For the other data, we work to keep the data as accurate as possible. If you find errors. Make a pull request.</p>
-			        </div>
-			        <div class="card-action">
-			          <a href="https://github.com/dsfsi/covid19za">Repository</a>
-			        </div>
-			      </div>
-	                 </div>
-	 	       <div class="col s5">
+	 	       <div class="col s6">
 		 	<svg class="za_confirmed white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
 		       </div>
+
 		</div>
 		<div class="row">
-		<div class="col s3"></div>
-	 	       <div class="col s5">
-		 	<svg class="za_confirmed_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
-		       </div>
+		 	       <div class="col s6">
+			 	<svg class="za_confirmed_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+			       </div>
 		</div>
-	 </div>
+		<div class="row">
+		 	       <div class="col s6">
+			 	<svg class="za_deceased white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+			       </div>
+		</div>
+		<div class="row">
+		 	       <div class="col s6">
+			 	<svg class="za_deceased_delta white lighten-5" style="width:800px;height:500px;border:1px lightgray solid;" />
+			       </div>
+			</div>
+	         </div>
+	         </div>
+
+	         </div>
+
     </div>
   <!-- End of graph page content  -->
 </div>

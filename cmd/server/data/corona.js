@@ -375,6 +375,10 @@ async function render() {
 	  za_confirmed = "https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_confirmed.csv"
 	d3.csv(za_confirmed, data => {return {data}}).then(data => vis_za(data,"za_confirmed"))
 	d3.csv(za_confirmed, data => {return {data}}).then(data => vis_za(data,"za_confirmed_delta"))
+
+	  za_deceased = "https://raw.githubusercontent.com/dsfsi/covid19za/master/data/covid19za_provincial_cumulative_timeline_deaths.csv"
+	d3.csv(za_deceased, data => {return {data}}).then(data => vis_za(data,"za_deceased"))
+	d3.csv(za_deceased, data => {return {data}}).then(data => vis_za(data,"za_deceased_delta"))
 }
 
 
@@ -538,6 +542,7 @@ function  reloadcolors() {
 
 function cleanData(d,key) {
 	if (key.includes("za")) {
+
 	   return cleanDailyZa(d,key)
 	}
 
@@ -553,7 +558,12 @@ function cleanData(d,key) {
 
 function breakout(provinces, str, d) {
 	  p = provinces.get(str) || { name: str, values: new Array()}
+	  prev = +(p.values[p.values.length-1])
 	  p.values.push(+d.data[str])
+	  //its cumulative.. if a day is missing than at the least it has to be equal to the previous day
+	  if (p.values[p.values.length-2] > p.values[p.values.length-1]) {
+	  	p.values[p.values.length-1] = p.values[p.values.length-2]
+	  }
 	  provinces.set(str,p)
 	  return provinces
 }
@@ -583,16 +593,16 @@ function cleanDailyZa(incoming, key) {
  	//console.log(columns)
  	  var outgoing = {
 	    //y: key,
-	    y: "confirmed cases in South Africa",
+	    y: key.replace("za_","South Africa "),
 	    series: s,
 	   dates: columns.map(d3.utcParse("%d-%m-%Y")) //05-03-2020
   	}
 
-  	//console.log("cleaned",outgoing)
+  	//console.log(key,outgoing)
 	  if (key.includes("delta")) {
 	   period = + ( $("input#deltaaverageZa").val() )
 	   period = period || 14
-	    outgoing.y = outgoing.y + " (per day averaged over " + period + " days)"
+	    outgoing.y = outgoing.y.replace("_delta"," (per day averaged over " + period + " days)")
 	    outgoing.series.forEach( d=> {
 	      previous = d.values.slice(0)
 	      previous.unshift(0)
@@ -600,13 +610,10 @@ function cleanDailyZa(incoming, key) {
 	      	       if (previous[i+1]==0) {
 	      	        previous[i+1]=e
 	      	       }
-
-
 		      return e
 	      })
 	      d.values = d.values.map( (e,i) => previous[i+1] - previous[i] )
 	   })
-
 		outgoing.series.forEach( d=> {
 		  ghost = d.values.slice(0)
 		  for (let i  = 1; i < period; i++) {
@@ -825,7 +832,7 @@ function vis(d,key) {
 
    let y = showSqrt ?
     d3.scaleLog().clamp(true)
-    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
+    .domain([0.1, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
    :
      d3.scaleLinear().clamp(true)
@@ -1322,7 +1329,7 @@ function vis_za(d,key) {
 
    let y = showSqrt ?
     d3.scaleLog().clamp(true)
-    .domain([1, d3.max(data.series, d => d3.max(d.values))]).nice()
+    .domain([0.1, d3.max(data.series, d => d3.max(d.values))]).nice()
     .range([height - margin.bottom, margin.top])
    :
      d3.scaleLinear().clamp(true)
@@ -1349,7 +1356,7 @@ function vis_za(d,key) {
 
         line = d3.line()//.curve(d3.curveMonotoneX)
     .defined( d => {
-     return !isNaN(d) && d!=0
+     return !isNaN(d)
      })
     .x((d, i) => x(data.dates[i]))
     .y(d => y(d))
@@ -1394,8 +1401,6 @@ function vis_za(d,key) {
       	return c(d.name)
       })
       .attr("d", d => line(d.values))
-
-
 	        svg.append("g")
 	             .attr("id","names")
 	             .selectAll("g")
@@ -1412,7 +1417,7 @@ function vis_za(d,key) {
 	           } )
 
 
-   //console.log(data)
+  // console.log(data)
 //  svg.call(hover, path, data, x, y, c);
 
 
