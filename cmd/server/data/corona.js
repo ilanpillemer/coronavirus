@@ -163,7 +163,9 @@ async function setUp(data) {
 		  .selectAll("label.country")
 		  .data(data.filter(d=> {
 		            continent = continentMap.get(iso2.get(extractKey(d)))
-			  return continent == "North America" && !extractKey(d).includes("US ") && !defaultCountries.includes(extractKey(d))
+		            fName = extractKey(d).trim()
+
+			  return continent == "North America" && !fName.includes("US ")  && !defaultCountries.includes(fName)
 			  })
 		  , d => extractKey(d))
 		  .enter() //only runs once as data series doesnt change
