@@ -42,7 +42,7 @@ function extractKey(d) {
 async function setUp(data) {
 	    // setup checkboxes
 	   // console.log(continentMap)
-	  const defaultCountries =  ["US ","Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","US ","Israel ","China Hubei","Germany ","Singapore ","Japan "]
+	  const defaultCountries =  ["Belgium ","Belarus ","Russia ","Spain ","United Kingdom ","South Africa ","France ","Sweden ","Italy ","Israel ","China Hubei","Germany ","Singapore ","Japan "]
 
 		 //Africa
 		  const lblAfrica =  d3
