@@ -11,10 +11,6 @@ The website is strictly for educational and academic research purposes only.
 
 + https://schmooze.chevrutah.com/corona
 
-# caveats
-
-+ If you are using MacOS graphical rendering performs the best on Safari, decently on Firefox and poorly on Chrome. This seems related to how each browser leverages the GPU.
-
 # sources
 
 ## John Hopkins
